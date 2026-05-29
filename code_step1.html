@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Meal Planner</title>
+    <style>
+        /* Pengaturan dasar halaman */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Kotak putih utama (container) */
+        .wadah-form {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+
+        /* Judul halaman */
+        .judul {
+            color: #2e8b57; /* Warna hijau kalem */
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        /* Kotak promosi warna oranye */
+        .kotak-promo {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        .kotak-promo h3 {
+            margin: 0 0 5px 0;
+            color: #d84315;
+            font-size: 15px;
+        }
+
+        .kotak-promo p {
+            margin: 0;
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* Pengaturan jarak setiap input form */
+        .grup-input {
+            margin-bottom: 15px;
+        }
+
+        .grup-input label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        /* Tampilan kotak input dan pilihan menu */
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Agar padding tidak merusak lebar w-100 */
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #2e8b57;
+        }
+
+        /* Area tombol di kanan bawah */
+        .area-tombol {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .tombol {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tombol-cek {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .tombol-lanjut {
+            background-color: #2e8b57;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tombol:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wadah-form">
+        <h2 class="judul">Smart Meal Planner</h2>
+        
+        <div class="kotak-promo">
+            <h3>Rencanakan Menu Praktis & Sehat!</h3>
+            <p>Bantu kamu menyusun menu mingguan yang lezat sesuai dengan jumlah orang dan budget kamu.</p>
+        </div>
+
+        <form action="#" method="POST">
+            <div class="grup-input">
+                <label>Jumlah Individu</label>
+                <input type="number" placeholder="Contoh: 2" min="1" required>
+            </div>
+
+            <div class="grup-input">
+                <label>Budget Mingguan (Rp)</label>
+                <input type="number" placeholder="Contoh: 300000" min="1" required>
+            </div>
+
+            <div class="grup-input">
+                <label>Mode Nutrisi</label>
+                <select required>
+                    <option value="" disabled selected>Pilih mode menu</option>
+                    <option value="hemat">Hemat</option>
+                    <option value="seimbang">Seimbang</option>
+                </select>
+            </div>
+
+            <div class="area-tombol">
+                <button type="submit" class="tombol tombol-cek">Cek Kelengkapan</button>
+                <button type="button" class="tombol tombol-lanjut">Lanjut ke Step 2</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
