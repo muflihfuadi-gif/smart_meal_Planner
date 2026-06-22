@@ -1,0 +1,97 @@
+<div id="step-4" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7">
+  <div class="flex flex-col items-center justify-center text-center mb-6">
+    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl font-bold mb-3 animate-bounce">
+      ✓
+    </div>
+    <h2 class="text-[#2e8b57] font-bold text-2xl m-0">Rencana Menu Siap!</h2>
+    <div class="text-gray-500 text-sm mt-1">Sesi perencanaan menu Anda telah berhasil dibuat</div>
+  </div>
+
+  <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-6 space-y-3">
+    <h4 class="font-bold text-sm text-gray-800 border-b border-gray-200 pb-2">📋 Ringkasan Data Perencanaan</h4>
+    
+    <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-600">
+      <div>Jumlah Individu:</div>
+      <div id="final-jumlah-individu" class="font-semibold text-gray-900 text-right">0 Orang</div>
+      
+      <div>Target Budget Mingguan:</div>
+      <div id="final-target-budget" class="font-semibold text-gray-900 text-right">Rp 0</div>
+      
+      <div>Mode Nutrisi Dipilih:</div>
+      <div id="final-mode-nutrisi" class="font-semibold text-right capitalize text-emerald-700">Hemat</div>
+
+      <div>Total Estimasi Belanja:</div>
+      <div id="final-total-belanja" class="font-semibold text-gray-900 text-right">Rp 245.000</div>
+    </div>
+  </div>
+
+  <div class="bg-orange-50 border-l-4 border-orange-400 px-4 py-3 rounded mb-8 text-xs text-gray-600 leading-relaxed">
+    <strong class="text-orange-700 block mb-1">💡 Tips Belanja Pintar:</strong>
+    Bawalah daftar belanjaan dari Step 3 ke pasar tradisional atau supermarket terdekat untuk mendapatkan harga terbaik yang sesuai dengan estimasi budget Anda.
+  </div>
+
+  <div class="flex justify-between items-center">
+    <button 
+      type="button" 
+      onclick="kembaliKeStep3()"
+      class="px-5 py-2.5 bg-gray-200 text-gray-700 font-medium text-sm rounded hover:opacity-80 transition-opacity cursor-pointer"
+    >
+      Lihat Daftar Belanja (Step 3)
+    </button>
+    <button 
+      type="button" 
+      onclick="mulaiUlangFlow()"
+      class="px-5 py-2.5 bg-[#2e8b57] text-white font-bold text-sm rounded shadow-md shadow-green-700/20 hover:opacity-90 transition-opacity cursor-pointer"
+    >
+      Buat Menu Baru
+    </button>
+  </div>
+</div>
+
+<script>
+  /**
+   * Fungsi penanganan logika perpindahan data JSON khusus Step 4.
+   * Fungsi ini dipanggil saat user menekan tombol lanjut dari Step 3.
+   * @param {Object} finalSessionDataJson - Objek JSON state yang dibawa dari step-step sebelumnya.
+   */
+  function updateStep4View(finalSessionDataJson) {
+    if (finalSessionDataJson) {
+      // 1. Tampilkan Jumlah Individu dari JSON
+      if (finalSessionDataJson.jumlahIndividu) {
+        document.getElementById('final-jumlah-individu').innerText = finalSessionDataJson.jumlahIndividu + " Orang";
+      }
+      
+      // 2. Tampilkan Target Budget dari JSON dengan format rupiah
+      if (finalSessionDataJson.budgetMingguan) {
+        document.getElementById('final-target-budget').innerText = "Rp " + parseInt(finalSessionDataJson.budgetMingguan).toLocaleString('id-ID');
+      }
+      
+      // 3. Tampilkan Mode Nutrisi dari JSON
+      if (finalSessionDataJson.modeNutrisi) {
+        document.getElementById('final-mode-nutrisi').innerText = finalSessionDataJson.modeNutrisi;
+      }
+      
+      // 4. Log ke console untuk keperluan pengecekan data interchange JSON
+      console.log("Step 4 Berhasil Menerima Data JSON Akhir:", finalSessionDataJson);
+    }
+  }
+
+  // Aksi Tombol: Mundur kembali ke Step 3 jika ingin mengecek ulang daftar belanjaan
+  function kembaliKeStep3() {
+    document.getElementById('step-4').classList.add('hidden');
+    document.getElementById('step-3').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Aksi Tombol: Mulai ulang aplikasi dari awal (Reset ke Step 1)
+  function mulaiUlangFlow() {
+    // Mereset isi form Step 1 (jika fungsi ini dijalankan di file gabungan)
+    const formStep1 = document.getElementById('form-step-1');
+    if (formStep1) formStep1.reset();
+    
+    // Kembali ke halaman pertama
+    document.getElementById('step-4').classList.add('hidden');
+    document.getElementById('step-1').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
