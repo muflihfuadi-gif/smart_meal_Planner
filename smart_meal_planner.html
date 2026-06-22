@@ -6,31 +6,26 @@
   <title>Smart Meal Planner</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    
+    /* Menghilangkan panah default pada tag <summary> di berbagai browser */
     summary::-webkit-details-marker { display: none; }
     summary { list-style: none; }
   </style>
 </head>
-<body class="bg-gray-100 flex justify-center px-4 py-8">
+<body class="bg-gray-100 flex flex-col items-center justify-center px-4 py-8 min-h-screen font-sans text-gray-800">
 
-  <div class="bg-white w-full max-w-md rounded-lg shadow-md p-8 mt-6">
-
-    <!-- Judul -->
+  <div id="step-1" class="bg-white w-full max-w-md rounded-lg shadow-md p-8 mt-6">
     <h2 class="text-2xl font-bold text-center text-green-700 mb-5">Smart Meal Planner</h2>
 
-    <!-- Kotak Promo -->
     <div class="bg-orange-50 border-l-4 border-orange-400 px-4 py-3 mb-6 rounded-r">
       <h3 class="text-sm font-bold text-red-700 mb-1">Rencanakan Menu Praktis & Sehat!</h3>
       <p class="text-xs text-gray-500">Bantu kamu menyusun menu mingguan yang lezat sesuai dengan jumlah orang dan budget kamu.</p>
     </div>
 
-    <!-- Form -->
-    <form action="#" method="POST">
-
-      <!-- Jumlah Individu -->
+    <form id="form-step-1" onsubmit="event.preventDefault();">
       <div class="mb-4">
         <label class="block text-sm font-bold text-gray-700 mb-1">Jumlah Individu</label>
         <input
+          id="input-individu"
           type="number"
           placeholder="Contoh: 2"
           min="1"
@@ -39,10 +34,10 @@
         >
       </div>
 
-      <!-- Budget Mingguan -->
       <div class="mb-4">
         <label class="block text-sm font-bold text-gray-700 mb-1">Budget Mingguan (Rp)</label>
         <input
+          id="input-budget"
           type="number"
           placeholder="Contoh: 300000"
           min="1"
@@ -51,10 +46,10 @@
         >
       </div>
 
-      <!-- Mode Nutrisi -->
       <div class="mb-4">
         <label class="block text-sm font-bold text-gray-700 mb-1">Mode Nutrisi</label>
         <select
+          id="select-nutrisi"
           required
           class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600 text-sm bg-white"
         >
@@ -64,25 +59,26 @@
         </select>
       </div>
 
-      <!-- Tombol -->
       <div class="flex justify-end gap-3 mt-6">
         <button
-          type="submit"
+          type="button"
+          onclick="cekKelengkapanData()"
           class="px-4 py-2 bg-gray-200 text-gray-700 rounded text-sm cursor-pointer hover:opacity-80"
         >
           Cek Kelengkapan
         </button>
         <button
           type="button"
+          onclick="lanjutKeStep2()"
           class="px-4 py-2 bg-green-700 text-white font-bold rounded text-sm cursor-pointer hover:opacity-80"
         >
           Lanjut ke Step 2
         </button>
       </div>
-
     </form>
   </div>
-<div id="step-2" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
+
+  <div id="step-2" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
     <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">Smart Meal Planner</h2>
     <div class="text-center text-gray-500 text-sm mt-1 mb-6">Rencana Menu Mingguan Anda</div>
 
@@ -136,7 +132,7 @@
         <div class="p-4 border-t border-gray-200 bg-white space-y-4">
           <div>
             <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🍳 Sarapan</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Bugur Oatmeal Instan Polos & 1 Telur Rebus</p>
+            <p class="text-base font-semibold text-gray-900 my-1">Bubur Oatmeal Instan Polos & 1 Telur Rebus</p>
             <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
               <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Oatmeal</span></div>
               <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Telur Rebus</span></div>
@@ -385,13 +381,15 @@
       </button>
       <button 
         type="button" 
+        onclick="lanjutKeStep3()"
         class="px-5 py-2.5 bg-[#2e8b57] text-white font-bold text-sm rounded shadow-md shadow-green-700/20 hover:opacity-90 transition-opacity cursor-pointer"
       >
         Lanjut ke Step 3
       </button>
     </div>
   </div>
-<div id="step-3" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
+
+  <div id="step-3" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
     <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">Smart Meal Planner</h2>
     <div class="text-center text-gray-500 text-sm mt-1 mb-6">Daftar Belanja & Estimasi Anggaran</div>
 
@@ -465,19 +463,26 @@
       </button>
     </div>
   </div>
+
   <script>
-    
-  // Fungsi pembantu untuk mengambil data dari Form Step 1 dalam bentuk JSON object
+    // Penampung data JSON State Global
+    let currentAppSessionData = {
+      jumlahIndividu: null,
+      budgetMingguan: null,
+      modeNutrisi: null,
+      totalEstimasiBelanja: 245000 // nilai kalkulasi menu bawaan
+    };
+
+    // Fungsi mengambil data ter-update dari Step 1 form
     function getFormDataJson() {
-      const data = {
+      return {
         jumlahIndividu: document.getElementById('input-individu').value,
         budgetMingguan: document.getElementById('input-budget').value,
         modeNutrisi: document.getElementById('select-nutrisi').value
       };
-      return data;
     }
 
-    // Fungsi untuk mengecek validasi kelengkapan data (Sesuai dengan percabangan "Data Lengkap?" pada Flowchart)
+    // Fungsi Validasi Kelengkapan (Percabangan flowchart: Data Lengkap?)
     function isDataLengkap(dataJson) {
       if (!dataJson.jumlahIndividu || !dataJson.budgetMingguan || !dataJson.modeNutrisi) {
         return false;
@@ -488,64 +493,76 @@
     // Aksi Tombol: Cek Kelengkapan
     function cekKelengkapanData() {
       const currentData = getFormDataJson();
-      
       if (isDataLengkap(currentData)) {
-        alert("Data lengkap! Anda siap lanjut ke Step 2.\n\nJSON Data: " + JSON.stringify(currentData, null, 2));
+        alert("Data lengkap! Anda siap lanjut ke Step 2.\n\nJSON Data Transfer:\n" + JSON.stringify(currentData, null, 2));
       } else {
         alert("⚠️ Alert!\nData Tidak Lengkap. Lengkapi data sekarang!");
       }
     }
 
-    // Aksi Tombol: Lanjut ke Step 2
+    // Aksi Tombol: Navigasi Lanjut ke Step 2
     function lanjutKeStep2() {
       const currentData = getFormDataJson();
-      
-      // Jika data tidak lengkap, munculkan alert error dan gagalkan perpindahan (Sesuai alur flowchart)
       if (!isDataLengkap(currentData)) {
         alert("⚠️ Alert!\nData Tidak Lengkap. Lengkapi data sekarang!");
         return;
       }
 
-      // Log simulasi pengiriman data JSON antar step di console log
-      console.log("Transisi ke Step 2 sukses membawa data state (JSON):", currentData);
+      // Menyimpan state ke sesi global JSON objek
+      currentAppSessionData.jumlahIndividu = currentData.jumlahIndividu;
+      currentAppSessionData.budgetMingguan = parseInt(currentData.budgetMingguan);
+      currentAppSessionData.modeNutrisi = currentData.modeNutrisi;
+
+      console.log("Transisi Sukses -> Membawa Objek JSON ke Step 2:", currentAppSessionData);
 
       // Sembunyikan Step 1, Tampilkan Step 2
       document.getElementById('step-1').classList.add('hidden');
       document.getElementById('step-2').classList.remove('hidden');
-      
-      // Scroll otomatis ke atas halaman saat pindah step
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Aksi Tombol: Kembali ke Step 1
-    function kembaliKeStep1() {
-      document.getElementById('step-2').classList.add('hidden');
-      document.getElementById('step-1').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-// Fungsi logika perpindahan data JSON dan interaksi khusus Step 3
-  function updateStep3View(sessionDataJson) {
-    // Memformat target budget ke dalam Rupiah secara dinamis dari JSON state
-    if(sessionDataJson && sessionDataJson.budgetMingguan) {
-      document.getElementById('summary-target-budget').innerText = "Rp " + parseInt(sessionDataJson.budgetMingguan).toLocaleString('id-ID');
+    // Aksi Tombol: Navigasi Lanjut ke Step 3
+    function lanjutKeStep3() {
+      console.log("Transisi Sukses -> Membawa Objek JSON ke Step 3:", currentAppSessionData);
+
+      // Update Tampilan Ringkasan di Step 3 menggunakan data JSON session
+      document.getElementById('summary-target-budget').innerText = "Rp " + currentAppSessionData.budgetMingguan.toLocaleString('id-ID');
       
       const statusElement = document.getElementById('summary-status-budget');
-      const totalBelanja = 245000; // Total dari seluruh list belanja di atas
-      
-      if (parseInt(sessionDataJson.budgetMingguan) >= totalBelanja) {
+      // Percabangan logika evaluasi budget terhadap estimasi belanja
+      if (currentAppSessionData.budgetMingguan >= currentAppSessionData.totalEstimasiBelanja) {
         statusElement.innerText = "✓ Anggaran Aman (Sesuai Batas Hemat/Seimbang)";
         statusElement.className = "text-xs font-semibold text-green-700";
       } else {
         statusElement.innerText = "⚠️ Anggaran Melebihi Target! Rekomendasi mengganti mode ke 'Hemat'";
         statusElement.className = "text-xs font-semibold text-red-600";
       }
-    }
-  }
 
-  function selesaiFlow() {
-    alert("Rencana menu dan daftar belanja berhasil disimpan ke sistem!");
-  }
+      // Sembunyikan Step 2, Tampilkan Step 3
+      document.getElementById('step-2').classList.add('hidden');
+      document.getElementById('step-3').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Aksi Tombol: Kembali ke Step 1 dari Step 2
+    function kembaliKeStep1() {
+      document.getElementById('step-2').classList.add('hidden');
+      document.getElementById('step-1').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Aksi Tombol: Kembali ke Step 2 dari Step 3
+    function kembaliKeStep2() {
+      document.getElementById('step-3').classList.add('hidden');
+      document.getElementById('step-2').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Selesai & Simpan Data Akhir
+    function selesaiFlow() {
+      alert("Rencana menu berhasil disimpan!\n\nJSON Output Final:\n" + JSON.stringify(currentAppSessionData, null, 2));
+    }
   </script>
+
 </body>
 </html>
-
