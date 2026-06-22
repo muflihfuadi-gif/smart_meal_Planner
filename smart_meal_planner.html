@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Meal Planner</title>
+  <title>Smart Meal Planner - Full Steps 1-4</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    /* Menghilangkan panah default pada tag <summary> di berbagai browser */
     summary::-webkit-details-marker { display: none; }
     summary { list-style: none; }
   </style>
@@ -79,7 +80,7 @@
 
   <div id="step-2" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
     <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">Smart Meal Planner</h2>
-    <div class="text-center text-gray-500 text-sm mt-1 mb-6">Rencana Menu Mingguan Anda</div>
+    <div class="text-center text-gray-500 text-sm mt-1 mb-6">Rencana Menu Mingguan Anda (<span id="s2-porsi-badge" class="font-semibold text-emerald-700">1 Orang</span>)</div>
 
     <div class="space-y-3">
       <details class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm" open>
@@ -399,10 +400,10 @@
       </div>
       <div>
         <span class="text-xs text-gray-500 block">Total Estimasi Belanja:</span>
-        <span id="summary-total-belanja" class="text-sm font-bold text-emerald-700">Rp 245.000</span>
+        <span id="summary-total-belanja" class="text-sm font-bold text-emerald-700">Rp 0</span>
       </div>
       <div class="col-span-2 border-t border-gray-200 pt-2 mt-1">
-        <span id="summary-status-budget" class="text-xs font-semibold text-green-700">✓ Anggaran Aman (Sesuai Batas Hemat/Seimbang)</span>
+        <span id="summary-status-budget" class="text-xs font-semibold text-green-700">✓ Anggaran Aman</span>
       </div>
     </div>
 
@@ -410,37 +411,34 @@
       <div class="border border-gray-200 rounded-md p-4 bg-white">
         <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
           <span>🍗 Sumber Protein</span>
-          <span class="text-xs text-gray-400 font-normal">Estimasi</span>
+          <span id="s3-cost-protein" class="text-xs font-semibold text-emerald-700">Rp 0</span>
         </h4>
         <ul class="space-y-1.5 text-xs text-gray-600">
-          <li class="flex justify-between"><span>• Dada Ayam (500g)</span> <span class="font-medium text-gray-800">Rp 28.000</span></li>
-          <li class="flex justify-between"><span>• Telur Ayam (1 kg)</span> <span class="font-medium text-gray-800">Rp 27.000</span></li>
-          <li class="flex justify-between"><span>• Telur Puyuh & Sarden Kaleng</span> <span class="font-medium text-gray-800">Rp 35.000</span></li>
-          <li class="flex justify-between"><span>• Tahu, Tempe, & Jamur Tiram</span> <span class="font-medium text-gray-800">Rp 20.000</span></li>
+          <li class="flex justify-between"><span>• Dada Ayam (<span id="s3-qty-ayam">500</span>g)</span></li>
+          <li class="flex justify-between"><span>• Telur Ayam (<span id="s3-qty-telur">1</span> kg)</span></li>
+          <li class="flex justify-between"><span>• Telur Puyuh, Sarden, Tahu & Tempe</span></li>
         </ul>
       </div>
 
       <div class="border border-gray-200 rounded-md p-4 bg-white">
         <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
           <span>🍞 Karbohidrat & Sembako</span>
-          <span class="text-xs text-gray-400 font-normal">Estimasi</span>
+          <span id="s3-cost-karbo" class="text-xs font-semibold text-emerald-700">Rp 0</span>
         </h4>
         <ul class="space-y-1.5 text-xs text-gray-600">
-          <li class="flex justify-between"><span>• Beras Putih (5 kg)</span> <span class="font-medium text-gray-800">Rp 75.000</span></li>
-          <li class="flex justify-between"><span>• Oatmeal Instan & Roti Tawar</span> <span class="font-medium text-gray-800">Rp 25.000</span></li>
-          <li class="flex justify-between"><span>• Singkong/Ubi & Makaroni</span> <span class="font-medium text-gray-800">Rp 15.000</span></li>
+          <li class="flex justify-between"><span>• Beras Putih Premium (<span id="s3-qty-beras">5</span> kg)</span></li>
+          <li class="flex justify-between"><span>• Oatmeal Instan, Roti Tawar & Ubi</span></li>
         </ul>
       </div>
 
       <div class="border border-gray-200 rounded-md p-4 bg-white">
         <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
           <span>🥕 Sayuran, Bumbu & Lainnya</span>
-          <span class="text-xs text-gray-400 font-normal">Estimasi</span>
+          <span id="s3-cost-mikro" class="text-xs font-semibold text-emerald-700">Rp 0</span>
         </h4>
         <ul class="space-y-1.5 text-xs text-gray-600">
-          <li class="flex justify-between"><span>• Sayuran (Bayam, Kangkung, Sawi, Wortel)</span> <span class="font-medium text-gray-800">Rp 12.000</span></li>
-          <li class="flex justify-between"><span>• Paket Bumbu Sayur Asem & Sop</span> <span class="font-medium text-gray-800">Rp 8.000</span></li>
-          <li class="flex justify-between"><span>• Minyak Kelapa/Minyak Goreng & Mentega</span> <span class="font-medium text-gray-800">Rp 15.000</span></li>
+          <li class="flex justify-between"><span>• Bayam, Kangkung, Sawi, Wortel & Jamur</span></li>
+          <li class="flex justify-between"><span>• Paket Bumbu Instan & Minyak Goreng</span></li>
         </ul>
       </div>
     </div>
@@ -455,72 +453,119 @@
       </button>
       <button 
         type="button" 
-        onclick="selesaiFlow()"
+        onclick="lanjutKeStep4()"
         class="px-5 py-2.5 bg-orange-500 text-white font-bold text-sm rounded shadow-md shadow-orange-700/20 hover:opacity-90 transition-opacity cursor-pointer"
       >
-        Simpan Rencana Menu
+        Lanjut ke STEP 4 ➔
       </button>
     </div>
   </div>
-<div id="step-4" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7">
-  <div class="flex flex-col items-center justify-center text-center mb-6">
-    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl font-bold mb-3 animate-bounce">
-      ✓
+
+  <div id="step-4" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
+    <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">STEP 4</h2>
+    <div class="text-center text-gray-500 text-sm mt-1 mb-6">Generate Rencana Belanja Final</div>
+
+    <div class="space-y-4 mb-6">
+      <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+        <h3 class="font-bold text-sm text-gray-800 mb-3 flex items-center gap-1.5">
+          💰 Budgeting: Rincian Harga Per Kategori
+        </h3>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between border-b pb-1.5 border-gray-200">
+            <span class="text-gray-600">Total Kebutuhan Karbohidrat</span>
+            <span class="font-semibold text-gray-800" id="s4-cost-karbo">Rp 0</span>
+          </div>
+          <div class="flex justify-between border-b pb-1.5 border-gray-200">
+            <span class="text-gray-600">Total Kebutuhan Protein</span>
+            <span class="font-semibold text-gray-800" id="s4-cost-protein">Rp 0</span>
+          </div>
+          <div class="flex justify-between border-b pb-1.5 border-gray-200">
+            <span class="text-gray-600">Total Mikronutrien, Sayur & Bumbu</span>
+            <span class="font-semibold text-gray-800" id="s4-cost-mikro">Rp 0</span>
+          </div>
+        </div>
+        
+        <div class="mt-4 pt-3 border-t border-dashed border-gray-300 text-xs">
+          <div class="flex justify-between items-center bg-white p-2 rounded border">
+            <span class="font-medium text-gray-700">Total Biaya Belanja Akhir:</span>
+            <span class="font-bold text-emerald-700 text-sm" id="s4-total-belanja">Rp 0</span>
+          </div>
+          <div class="flex justify-between items-center mt-1.5 px-2 text-[11px] text-gray-500">
+            <span>Batas Anggaran Maksimal (Input Step 1):</span>
+            <span class="font-semibold text-gray-700" id="s4-budget-input">Rp 0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+        <h3 class="font-bold text-sm text-gray-800 mb-2 flex items-center gap-1.5">
+          🛒 Rencana Kuantitas Belanja (Sesuai Gizi & Porsi)
+        </h3>
+        <p class="text-[11px] text-gray-500 mb-3 leading-relaxed">
+          Kuantitas di bawah ini dihitung otomatis berdasarkan menu harian di **STEP 2** dan kebutuhan makro/mikronutrien pada **STEP 3**.
+        </p>
+        <ul class="space-y-2 text-xs text-gray-700">
+          <li class="flex items-center gap-2 bg-white p-2 rounded border border-gray-100">
+            <span class="text-emerald-600">✔</span>
+            <span>Beras Premium & Sembako Karbo: <span id="s4-qty-karbo-text" class="font-bold">0 kg</span></span>
+          </li>
+          <li class="flex items-center gap-2 bg-white p-2 rounded border border-gray-100">
+            <span class="text-emerald-600">✔</span>
+            <span>Dada Ayam & Telur Unggas: <span id="s4-qty-protein-text" class="font-bold">0 kg</span></span>
+          </li>
+          <li class="flex items-center gap-2 bg-white p-2 rounded border border-gray-100">
+            <span class="text-emerald-600">✔</span>
+            <span>Paket Sayuran Hijau & Bumbu Dapur: <span id="s4-qty-sayur-text" class="font-bold">0 Paket</span></span>
+          </li>
+        </ul>
+      </div>
     </div>
-    <h2 class="text-[#2e8b57] font-bold text-2xl m-0">Rencana Menu Siap!</h2>
-    <div class="text-gray-500 text-sm mt-1">Sesi perencanaan menu Anda telah berhasil dibuat</div>
-  </div>
 
-  <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-6 space-y-3">
-    <h4 class="font-bold text-sm text-gray-800 border-b border-gray-200 pb-2">📋 Ringkasan Data Perencanaan</h4>
-    
-    <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-600">
-      <div>Jumlah Individu:</div>
-      <div id="final-jumlah-individu" class="font-semibold text-gray-900 text-right">0 Orang</div>
-      
-      <div>Target Budget Mingguan:</div>
-      <div id="final-target-budget" class="font-semibold text-gray-900 text-right">Rp 0</div>
-      
-      <div>Mode Nutrisi Dipilih:</div>
-      <div id="final-mode-nutrisi" class="font-semibold text-right capitalize text-emerald-700">Hemat</div>
+    <div id="s4-status-verifikasi" class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center mb-6">
+      <div id="s4-status-text" class="text-xs"></div>
+    </div>
 
-      <div>Total Estimasi Belanja:</div>
-      <div id="final-total-belanja" class="font-semibold text-gray-900 text-right">Rp 245.000</div>
+    <div id="pdf-success-banner" class="hidden bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-3 text-xs font-semibold text-center mb-6">
+      ✅ File PDF Tersimpan! Dokumen rencana belanja berhasil dirender ke sistem cetak lokal.
+    </div>
+
+    <div class="space-y-2">
+      <button 
+        type="button" 
+        onclick="simpanSebagaiPDF()" 
+        class="w-full py-3 bg-blue-600 text-white font-bold text-sm rounded shadow-md hover:bg-blue-700 transition flex items-center justify-center gap-2 cursor-pointer"
+      >
+        📄 Tombol Simpan sebagai PDF
+      </button>
+
+      <button 
+        type="button" 
+        onclick="kembaliKeStep3()" 
+        class="w-full py-2 bg-gray-100 text-gray-600 font-medium text-xs rounded border border-gray-200 hover:bg-gray-200 transition text-center cursor-pointer"
+      >
+        Kembali ke STEP 3
+      </button>
+
+      <button 
+        type="button" 
+        onclick="kembaliKeStep1()" 
+        class="w-full py-3 bg-gray-800 text-white font-bold text-sm rounded hover:bg-gray-900 transition flex items-center justify-center gap-2 cursor-pointer mt-4"
+      >
+        🔄 Kembali ke STEP 1 (Loop Program)
+      </button>
     </div>
   </div>
 
-  <div class="bg-orange-50 border-l-4 border-orange-400 px-4 py-3 rounded mb-8 text-xs text-gray-600 leading-relaxed">
-    <strong class="text-orange-700 block mb-1">💡 Tips Belanja Pintar:</strong>
-    Bawalah daftar belanjaan dari Step 3 ke pasar tradisional atau supermarket terdekat untuk mendapatkan harga terbaik yang sesuai dengan estimasi budget Anda.
-  </div>
-
-  <div class="flex justify-between items-center">
-    <button 
-      type="button" 
-      onclick="kembaliKeStep3()"
-      class="px-5 py-2.5 bg-gray-200 text-gray-700 font-medium text-sm rounded hover:opacity-80 transition-opacity cursor-pointer"
-    >
-      Lihat Daftar Belanja (Step 3)
-    </button>
-    <button 
-      type="button" 
-      onclick="mulaiUlangFlow()"
-      class="px-5 py-2.5 bg-[#2e8b57] text-white font-bold text-sm rounded shadow-md shadow-green-700/20 hover:opacity-90 transition-opacity cursor-pointer"
-    >
-      Buat Menu Baru
-    </button>
-  </div>
-</div>
   <script>
-    // Penampung data JSON State Global
+    // Penampung data JSON State Global Utama aplikasi
     let currentAppSessionData = {
       jumlahIndividu: null,
       budgetMingguan: null,
       modeNutrisi: null,
-      totalEstimasiBelanja: 245000 // nilai kalkulasi menu bawaan
+      totalEstimasiBelanja: 0
     };
 
-    // Fungsi mengambil data ter-update dari Step 1 form
+    // Mengambil data ter-update dari Form STEP 1
     function getFormDataJson() {
       return {
         jumlahIndividu: document.getElementById('input-individu').value,
@@ -529,25 +574,22 @@
       };
     }
 
-    // Fungsi Validasi Kelengkapan (Percabangan flowchart: Data Lengkap?)
+    // Validasi data input di STEP 1
     function isDataLengkap(dataJson) {
-      if (!dataJson.jumlahIndividu || !dataJson.budgetMingguan || !dataJson.modeNutrisi) {
-        return false;
-      }
-      return true;
+      return !!(dataJson.jumlahIndividu && dataJson.budgetMingguan && dataJson.modeNutrisi);
     }
 
-    // Aksi Tombol: Cek Kelengkapan
+    // Tombol: Cek Kelengkapan Data
     function cekKelengkapanData() {
       const currentData = getFormDataJson();
       if (isDataLengkap(currentData)) {
         alert("Data lengkap! Anda siap lanjut ke Step 2.\n\nJSON Data Transfer:\n" + JSON.stringify(currentData, null, 2));
       } else {
-        alert("⚠️ Alert!\nData Tidak Lengkap. Lengkapi data sekarang!");
+        alert("⚠️ Alert!\nData Tidak Lengkap. Lengkapi semua kolom input terlebih dahulu!");
       }
     }
 
-    // Aksi Tombol: Navigasi Lanjut ke Step 2
+    // Navigasi ke STEP 2
     function lanjutKeStep2() {
       const currentData = getFormDataJson();
       if (!isDataLengkap(currentData)) {
@@ -555,67 +597,142 @@
         return;
       }
 
-      // Menyimpan state ke sesi global JSON objek
-      currentAppSessionData.jumlahIndividu = currentData.jumlahIndividu;
+      // Sinkronisasi data ke JSON Session Global
+      currentAppSessionData.jumlahIndividu = parseInt(currentData.jumlahIndividu);
       currentAppSessionData.budgetMingguan = parseInt(currentData.budgetMingguan);
       currentAppSessionData.modeNutrisi = currentData.modeNutrisi;
 
-      console.log("Transisi Sukses -> Membawa Objek JSON ke Step 2:", currentAppSessionData);
+      // Update Teks badge porsi orang secara dinamis di Step 2
+      document.getElementById('s2-porsi-badge').innerText = currentAppSessionData.jumlahIndividu + " Orang";
 
-      // Sembunyikan Step 1, Tampilkan Step 2
       document.getElementById('step-1').classList.add('hidden');
       document.getElementById('step-2').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Aksi Tombol: Navigasi Lanjut ke Step 3
+    // Navigasi ke STEP 3 + Pemrosesan Kalkulasi Dinamis Kebutuhan Gizi & Anggaran
     function lanjutKeStep3() {
-      console.log("Transisi Sukses -> Membawa Objek JSON ke Step 3:", currentAppSessionData);
+      const orang = currentAppSessionData.jumlahIndividu;
+      const mode = currentAppSessionData.modeNutrisi;
 
-      // Update Tampilan Ringkasan di Step 3 menggunakan data JSON session
+      // Logika Kalkulasi Berbasis Data JSON Input Step 1
+      // Nilai dasar (base) biaya per orang seminggu berdasarkan opsi mode nutrisi
+      let baseProtein = mode === 'seimbang' ? 110000 : 80000;
+      let baseKarbo = mode === 'seimbang' ? 85000 : 65000;
+      let baseMikro = mode === 'seimbang' ? 50000 : 35000;
+
+      let totalProtein = baseProtein * orang;
+      let totalKarbo = baseKarbo * orang;
+      let totalMikro = baseMikro * orang;
+      let totalBelanja = totalProtein + totalKarbo + totalMikro;
+
+      currentAppSessionData.totalEstimasiBelanja = totalBelanja;
+
+      // Render Nilai Dinamis ke Halaman STEP 3
       document.getElementById('summary-target-budget').innerText = "Rp " + currentAppSessionData.budgetMingguan.toLocaleString('id-ID');
+      document.getElementById('summary-total-belanja').innerText = "Rp " + totalBelanja.toLocaleString('id-ID');
       
+      document.getElementById('s3-cost-protein').innerText = "Rp " + totalProtein.toLocaleString('id-ID');
+      document.getElementById('s3-cost-karbo').innerText = "Rp " + totalKarbo.toLocaleString('id-ID');
+      document.getElementById('s3-cost-mikro').innerText = "Rp " + totalMikro.toLocaleString('id-ID');
+
+      // Update estimasi teks kuantitas fisik di Step 3 secara proporsional
+      document.getElementById('s3-qty-ayam').innerText = (500 * orang);
+      document.getElementById('s3-qty-telur').innerText = (1 * orang);
+      document.getElementById('s3-qty-beras').innerText = (5 * orang);
+
+      // Evaluasi Awal Kelayakan Budget
       const statusElement = document.getElementById('summary-status-budget');
-      // Percabangan logika evaluasi budget terhadap estimasi belanja
-      if (currentAppSessionData.budgetMingguan >= currentAppSessionData.totalEstimasiBelanja) {
-        statusElement.innerText = "✓ Anggaran Aman (Sesuai Batas Hemat/Seimbang)";
+      if (currentAppSessionData.budgetMingguan >= totalBelanja) {
+        statusElement.innerText = "✓ Anggaran Aman (Sesuai Batas " + mode.toUpperCase() + ")";
         statusElement.className = "text-xs font-semibold text-green-700";
       } else {
-        statusElement.innerText = "⚠️ Anggaran Melebihi Target! Rekomendasi mengganti mode ke 'Hemat'";
+        statusElement.innerText = "⚠️ Anggaran Melebihi Target! Rekomendasi mengganti mode ke 'Hemat' di Step 1.";
         statusElement.className = "text-xs font-semibold text-red-600";
       }
 
-      // Sembunyikan Step 2, Tampilkan Step 3
       document.getElementById('step-2').classList.add('hidden');
       document.getElementById('step-3').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Aksi Tombol: Kembali ke Step 1 dari Step 2
+    // Navigasi Terkoneksi dari STEP 3 ke STEP 4 (Pengolahan Cabang Logika Akhir Flowchart)
+    function lanjutKeStep4() {
+      const orang = currentAppSessionData.jumlahIndividu;
+      const mode = currentAppSessionData.modeNutrisi;
+      const budget = currentAppSessionData.budgetMingguan;
+      const totalBelanjaFinal = currentAppSessionData.totalEstimasiBelanja;
+
+      // Membagi distribusi harga sub-kategori item belanja secara dinamis
+      let costProtein = (mode === 'seimbang' ? 110000 : 80000) * orang;
+      let costKarbo = (mode === 'seimbang' ? 85000 : 65000) * orang;
+      let costMikro = (mode === 'seimbang' ? 50000 : 35000) * orang;
+
+      // 1. Sinkronisasi Data Cabang Kiri: Bagian Budgeting Per Item
+      document.getElementById('s4-cost-protein').innerText = "Rp " + costProtein.toLocaleString('id-ID');
+      document.getElementById('s4-cost-karbo').innerText = "Rp " + costKarbo.toLocaleString('id-ID');
+      document.getElementById('s4-cost-mikro').innerText = "Rp " + costMikro.toLocaleString('id-ID');
+      document.getElementById('s4-total-belanja').innerText = "Rp " + totalBelanjaFinal.toLocaleString('id-ID');
+      document.getElementById('s4-budget-input').innerText = "Rp " + budget.toLocaleString('id-ID');
+
+      // 2. Sinkronisasi Data Cabang Kanan: Kuantitas Fisik Berdasarkan Kebutuhan GIZI & Menu Porsi
+      document.getElementById('s4-qty-karbo-text').innerText = (3.5 * orang).toFixed(1) + " kg (Beras & Oats)";
+      document.getElementById('s4-qty-protein-text').innerText = (1.8 * orang).toFixed(1) + " kg (Daging & Telur)";
+      document.getElementById('s4-qty-sayur-text').innerText = (2 * orang) + " Paket Komplit (Sayur & Bumbu)";
+
+      // 3. Logika Evaluasi: Total Biaya Belanja <= Budget Mingguan Anda?
+      const boxVerifikasi = document.getElementById('s4-status-verifikasi');
+      const textVerifikasi = document.getElementById('s4-status-text');
+
+      if (totalBelanjaFinal <= budget) {
+        boxVerifikasi.className = "bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center mb-6";
+        textVerifikasi.innerHTML = `
+          <h4 class="font-bold text-sm text-emerald-900">✓ Verifikasi Kelengkapan Berhasil</h4>
+          <p class="text-gray-700 mt-1">Total Rencana Belanja (Rp ${totalBelanjaFinal.toLocaleString('id-ID')}) memenuhi batas aman alokasi budget Anda (Rp ${budget.toLocaleString('id-ID')}).</p>
+        `;
+      } else {
+        boxVerifikasi.className = "bg-red-50 border border-red-200 rounded-lg p-4 text-center mb-6";
+        textVerifikasi.innerHTML = `
+          <h4 class="font-bold text-sm text-red-900">⚠️ Verifikasi Kelengkapan Gagal</h4>
+          <p class="text-red-700 mt-1">Total Biaya Belanja Belanja (Rp ${totalBelanjaFinal.toLocaleString('id-ID')}) melebihi kapasitas anggaran awal Anda (Rp ${budget.toLocaleString('id-ID')}).</p>
+        `;
+      }
+
+      // Sembunyikan banner notifikasi PDF bawaan saat awal masuk halaman
+      document.getElementById('pdf-success-banner').classList.add('hidden');
+
+      document.getElementById('step-3').classList.add('hidden');
+      document.getElementById('step-4').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Tombol Cetak/Simpan PDF
+    function simpanSebagaiPDF() {
+      document.getElementById('pdf-success-banner').classList.remove('hidden');
+      setTimeout(() => {
+        window.print();
+      }, 300);
+    }
+
+    // Navigasi Kembali Antar-Step Berantai
     function kembaliKeStep1() {
       document.getElementById('step-2').classList.add('hidden');
+      document.getElementById('step-4').classList.add('hidden');
       document.getElementById('step-1').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Aksi Tombol: Kembali ke Step 2 dari Step 3
     function kembaliKeStep2() {
       document.getElementById('step-3').classList.add('hidden');
       document.getElementById('step-2').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Selesai & Simpan Data Akhir
-    function lanjutKeStep4() {
-  // Ambil data JSON state saat ini
-  const currentData = getFormDataJson();
-  // Kirim data JSON ke fungsi renderer Step 4
-  updateStep4View(currentData);
-  // Sembunyikan Step 3, Tampilkan Step 4
-  document.getElementById('step-3').classList.add('hidden');
-  document.getElementById('step-4').classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+    function kembaliKeStep3() {
+      document.getElementById('step-4').classList.add('hidden');
+      document.getElementById('step-3').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   </script>
 
 </body>
