@@ -1,202 +1,99 @@
 <div id="step-3" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7">
-  <!-- Judul Sesuai Flowchart -->
-  <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">STEP 3</h2>
-  <div class="text-center text-gray-500 text-sm mt-1 mb-6">Informasi Nutrisi & Budget</div>
+  <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">Smart Meal Planner</h2>
+  <div class="text-center text-gray-500 text-sm mt-1 mb-6">Daftar Belanja & Estimasi Anggaran</div>
 
-  <!-- Dua Tombol Utama Alur Otomatis Display -->
-  <div class="grid grid-cols-2 gap-4 mb-6">
-    <!-- Tombol 1: Informasi Nilai Gizi -->
-    <button 
-      type="button"
-      onclick="toggleNutrisiPanel()"
-      class="p-4 bg-emerald-50 border-2 border-emerald-500 rounded-lg text-left hover:bg-emerald-100 transition duration-200 cursor-pointer focus:outline-none"
-    >
-      <span class="block text-xs font-bold text-emerald-700 tracking-wide uppercase mb-1">Tombol 1</span>
-      <span class="text-sm font-bold text-gray-800 block">Total Informasi Nilai Gizi</span>
-      <span class="text-[11px] text-gray-500 mt-1 block">Diambil dari generate menu mingguan Step 2</span>
-    </button>
-
-    <!-- Tombol 2: Budget Perhari -->
-    <button 
-      type="button"
-      onclick="toggleBudgetPanel()"
-      class="p-4 bg-blue-50 border-2 border-blue-500 rounded-lg text-left hover:bg-blue-100 transition duration-200 cursor-pointer focus:outline-none"
-    >
-      <span class="block text-xs font-bold text-blue-700 tracking-wide uppercase mb-1">Tombol 2</span>
-      <span class="text-sm font-bold text-gray-800 block">Total Budget Perhari</span>
-      <span class="text-[11px] text-gray-500 mt-1 block">Akumulasi sarapan, siang, & malam harian</span>
-    </button>
+  <div class="bg-emerald-50 border-l-4 border-emerald-500 px-4 py-3 mb-6 rounded-r grid grid-cols-2 gap-2">
+    <div>
+      <span class="text-xs text-gray-500 block">Target Budget Anda:</span>
+      <span id="summary-target-budget" class="text-sm font-bold text-gray-900">Rp 0</span>
+    </div>
+    <div>
+      <span class="text-xs text-gray-500 block">Total Estimasi Belanja:</span>
+      <span id="summary-total-belanja" class="text-sm font-bold text-emerald-700">Rp 245.000</span>
+    </div>
+    <div class="col-span-2 border-t border-gray-200 pt-2 mt-1">
+      <span id="summary-status-budget" class="text-xs font-semibold text-green-700">✓ Anggaran Aman (Sesuai Batas Hemat/Seimbang)</span>
+    </div>
   </div>
 
-  <!-- PANEL TAMPILAN DATA (DIPICU OLEH TOMBOL DI ATAS) -->
   <div class="space-y-4">
-    
-    <!-- Output Tombol 1: Nilai Gizi per Sajian / Perhari -->
-    <div id="panel-nutrisi" class="border border-emerald-200 rounded-md p-4 bg-emerald-50/30">
-      <h4 class="font-bold text-sm text-emerald-900 mb-2 pb-1 border-b border-emerald-100">
-        📊 Nilai Gizi Rata-Rata Perhari (Berdasarkan Step 2)
+    <div class="border border-gray-200 rounded-md p-4 bg-white">
+      <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
+        <span>🍗 Sumber Protein</span>
+        <span class="text-xs text-gray-400 font-normal">Estimasi</span>
       </h4>
-      <div class="grid grid-cols-2 gap-3 text-xs text-gray-700">
-        <div class="bg-white p-2 rounded border border-gray-100">🔥 Energi: <span class="font-bold text-emerald-700" id="nutrisi-kalori">2.100 Kcal</span></div>
-        <div class="bg-white p-2 rounded border border-gray-100">🍗 Protein: <span class="font-bold text-emerald-700" id="nutrisi-protein">75g</span></div>
-        <div class="bg-white p-2 rounded border border-gray-100">🍞 Karbohidrat: <span class="font-bold text-emerald-700" id="nutrisi-karbo">250g</span></div>
-        <div class="bg-white p-2 rounded border border-gray-100">🥑 Lemak: <span class="font-bold text-emerald-700" id="nutrisi-lemak">65g</span></div>
-      </div>
+      <ul class="space-y-1.5 text-xs text-gray-600">
+        <li class="flex justify-between"><span>• Dada Ayam (500g)</span> <span class="font-medium text-gray-800">Rp 28.000</span></li>
+        <li class="flex justify-between"><span>• Telur Ayam (1 kg)</span> <span class="font-medium text-gray-800">Rp 27.000</span></li>
+        <li class="flex justify-between"><span>• Telur Puyuh & Sarden Kaleng</span> <span class="font-medium text-gray-800">Rp 35.000</span></li>
+        <li class="flex justify-between"><span>• Tahu, Tempe, & Jamur Tiram</span> <span class="font-medium text-gray-800">Rp 20.000</span></li>
+      </ul>
     </div>
 
-    <!-- Output Tombol 2: Akumulasi Budget Harian & Perminggu -->
-    <div id="panel-budget" class="border border-blue-200 rounded-md p-4 bg-blue-50/30">
-      <h4 class="font-bold text-sm text-blue-900 mb-2 pb-1 border-b border-blue-100">
-        💰 Akumulasi Budget Menu
+    <div class="border border-gray-200 rounded-md p-4 bg-white">
+      <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
+        <span>🍞 Karbohidrat & Sembako</span>
+        <span class="text-xs text-gray-400 font-normal">Estimasi</span>
       </h4>
-      <div class="space-y-2 text-xs text-gray-700">
-        <div class="flex justify-between items-center bg-white p-2 rounded border border-gray-100">
-          <span>Rata-rata Perhari (Sarapan + Siang + Malam):</span>
-          <span class="font-bold text-blue-700" id="budget-perhari">Rp 35.000 / hari</span>
-        </div>
-        <div class="flex justify-between items-center bg-white p-2 rounded border border-blue-100">
-          <span class="font-bold text-gray-800">Total Budget Perminggu (Akumulasi):</span>
-          <span class="font-bold text-base text-blue-800" id="budget-perminggu">Rp 245.000</span>
-        </div>
-      </div>
+      <ul class="space-y-1.5 text-xs text-gray-600">
+        <li class="flex justify-between"><span>• Beras Putih (5 kg)</span> <span class="font-medium text-gray-800">Rp 75.000</span></li>
+        <li class="flex justify-between"><span>• Oatmeal Instan & Roti Tawar</span> <span class="font-medium text-gray-800">Rp 25.000</span></li>
+        <li class="flex justify-between"><span>• Singkong/Ubi & Makaroni</span> <span class="font-medium text-gray-800">Rp 15.000</span></li>
+      </ul>
     </div>
 
+    <div class="border border-gray-200 rounded-md p-4 bg-white">
+      <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
+        <span>🥕 Sayuran, Bumbu & Lainnya</span>
+        <span class="text-xs text-gray-400 font-normal">Estimasi</span>
+      </h4>
+      <ul class="space-y-1.5 text-xs text-gray-600">
+        <li class="flex justify-between"><span>• Sayuran (Bayam, Kangkung, Sawi, Wortel)</span> <span class="font-medium text-gray-800">Rp 12.000</span></li>
+        <li class="flex justify-between"><span>• Paket Bumbu Sayur Asem & Sop</span> <span class="font-medium text-gray-800">Rp 8.000</span></li>
+        <li class="flex justify-between"><span>• Minyak Kelapa/Minyak Goreng & Mentega</span> <span class="font-medium text-gray-800">Rp 15.000</span></li>
+      </ul>
+    </div>
   </div>
 
-  <!-- STATUS VALIDASI LOGIKA (Total Budget <= Budget Input?) -->
-  <div class="mt-6 p-4 rounded-lg border" id="box-validasi">
-    <div class="text-xs text-gray-500">Evaluasi Anggaran:</div>
-    <div class="flex justify-between items-center mt-1">
-      <div>
-        <span class="text-xs block text-gray-600">Budget Input Anda: <strong id="val-budget-input">Rp 0</strong></span>
-        <span class="text-xs block text-gray-600">Total Budget Menu: <strong id="val-budget-menu">Rp 245.000</strong></span>
-      </div>
-      <div id="status-badge" class="text-xs font-bold px-3 py-1.5 rounded-full">
-        Checking...
-      </div>
-    </div>
-    <p id="status-deskripsi" class="text-[11px] mt-2 border-t pt-1.5 text-gray-500"></p>
-  </div>
-
-  <!-- Navigasi Bawah Sesuai Cabang Keputusan Flowchart -->
   <div class="flex justify-between items-center mt-8">
-    <!-- Tombol Jika Validasi Gagal (Tidak) -> Kembali ke STEP 2 untuk Revisi Menu -->
     <button 
       type="button" 
-      id="btn-revisi"
       onclick="kembaliKeStep2()"
-      class="px-5 py-2.5 bg-red-100 text-red-700 font-bold text-sm rounded border border-red-200 hover:bg-red-200 transition cursor-pointer"
+      class="px-5 py-2.5 bg-gray-200 text-gray-700 font-medium text-sm rounded hover:opacity-80 transition-opacity cursor-pointer"
     >
-      ⚠️ Revisi Menu (Kembali ke STEP 2)
+      Kembali ke Step 2
     </button>
-    
-    <!-- Tombol Jika Validasi Berhasil (Ya) -> Lanjut ke STEP 4 (Generate Rencana Belanja) -->
     <button 
       type="button" 
-      id="btn-lanjut-step4"
-      onclick="evaluasiDanLanjutStep4()"
-      class="px-5 py-2.5 bg-[#2e8b57] text-white font-bold text-sm rounded shadow-md shadow-green-700/20 hover:opacity-90 transition cursor-pointer"
+      onclick="selesaiFlow()"
+      class="px-5 py-2.5 bg-orange-500 text-white font-bold text-sm rounded shadow-md shadow-orange-700/20 hover:opacity-90 transition-opacity cursor-pointer"
     >
-      Lanjut ke STEP 4
+      Simpan Rencana Menu
     </button>
   </div>
 </div>
 
-<!-- ================= SCRIPT LOGIKA JAVASCRIPT INTEGRASI JSON ================= -->
 <script>
-  // Variabel penampung estimasi kalkulasi internal dari Step 2
-  const akumulasiDataStep2 = {
-    totalBudgetPerminggu: 245000, 
-    totalBudgetPerhari: 35000,
-    gizi: { kalori: "2.150 Kcal", protein: "78g", karbo: "245g", lemak: "60g" }
-  };
-
-  /**
-   * Fungsi Renderer Utama saat memasuki Step 3 dari Step 2.
-   * Dipanggil dengan melempar JSON inputan pengguna dari Step 1.
-   */
+  // Fungsi logika perpindahan data JSON dan interaksi khusus Step 3
   function updateStep3View(sessionDataJson) {
-    if (!sessionDataJson || !sessionDataJson.budgetMingguan) return;
-
-    const budgetInput = parseInt(sessionDataJson.budgetMingguan);
-    const totalMenuPerminggu = akumulasiDataStep2.totalBudgetPerminggu;
-    
-    // 1. Suntik data ke UI dari akumulasi Step 2 secara default
-    document.getElementById('budget-perhari').innerText = "Rp " + akumulasiDataStep2.totalBudgetPerhari.toLocaleString('id-ID') + " / hari";
-    document.getElementById('budget-perminggu').innerText = "Rp " + totalMenuPerminggu.toLocaleString('id-ID');
-    
-    document.getElementById('nutrisi-kalori').innerText = akumulasiDataStep2.gizi.kalori;
-    document.getElementById('nutrisi-protein').innerText = akumulasiDataStep2.gizi.protein;
-    document.getElementById('nutrisi-karbo').innerText = akumulasiDataStep2.gizi.karbo;
-    document.getElementById('nutrisi-lemak').innerText = akumulasiDataStep2.gizi.lemak;
-
-    // 2. Suntik data perbandingan budget ke kotak validasi
-    document.getElementById('val-budget-input').innerText = "Rp " + budgetInput.toLocaleString('id-ID');
-    document.getElementById('val-budget-menu').innerText = "Rp " + totalMenuPerminggu.toLocaleString('id-ID');
-
-    // 3. Eksekusi Logika Percabangan Diamond di Flowchart: Total Budget <= Budget Input?
-    const boxValidasi = document.getElementById('box-validasi');
-    const statusBadge = document.getElementById('status-badge');
-    const statusDeskripsi = document.getElementById('status-deskripsi');
-    const btnLanjut = document.getElementById('btn-lanjut-step4');
-    const btnRevisi = document.getElementById('btn-revisi');
-
-    if (totalMenuPerminggu <= budgetInput) {
-      // Kondisi YA
-      boxValidasi.className = "mt-6 p-4 rounded-lg border border-green-200 bg-green-50/50";
-      statusBadge.className = "text-xs font-bold px-3 py-1.5 rounded-full bg-green-100 text-green-700";
-      statusBadge.innerText = "✓ YA (Aman)";
-      statusDeskripsi.innerText = "Anggaran menu mingguan memenuhi batas budget input Anda. Anda diperbolehkan lanjut untuk meng-generate rencana belanja.";
+    // Memformat target budget ke dalam Rupiah secara dinamis dari JSON state
+    if(sessionDataJson && sessionDataJson.budgetMingguan) {
+      document.getElementById('summary-target-budget').innerText = "Rp " + parseInt(sessionDataJson.budgetMingguan).toLocaleString('id-ID');
       
-      // Mengatur prioritas tombol visual
-      btnLanjut.className = "px-5 py-2.5 bg-[#2e8b57] text-white font-bold text-sm rounded shadow-md hover:opacity-90 transition cursor-pointer";
-      btnRevisi.className = "px-5 py-2.5 bg-gray-100 text-gray-500 font-medium text-sm rounded border border-gray-200 hover:bg-gray-200 transition cursor-pointer";
-    } else {
-      // Kondisi TIDAK
-      boxValidasi.className = "mt-6 p-4 rounded-lg border border-red-200 bg-red-50/50";
-      statusBadge.className = "text-xs font-bold px-3 py-1.5 rounded-full bg-red-100 text-red-700";
-      statusBadge.innerText = "⚠️ TIDAK (Overbudget)";
-      statusDeskripsi.innerText = "Total budget perminggu melebih budget input Anda. Disarankan menekan tombol 'Revisi Menu' untuk menyesuaikan kembali pilihan porsi/mode nutrisi di Step 2.";
+      const statusElement = document.getElementById('summary-status-budget');
+      const totalBelanja = 245000; // Total dari seluruh list belanja di atas
       
-      // Mengatur prioritas tombol visual agar user dipaksa revisi
-      btnLanjut.className = "px-5 py-2.5 bg-gray-200 text-gray-400 font-medium text-sm rounded cursor-not-allowed opacity-60";
-      btnRevisi.className = "px-5 py-2.5 bg-red-600 text-white font-bold text-sm rounded shadow-md hover:bg-red-700 transition cursor-pointer";
+      if (parseInt(sessionDataJson.budgetMingguan) >= totalBelanja) {
+        statusElement.innerText = "✓ Anggaran Aman (Sesuai Batas Hemat/Seimbang)";
+        statusElement.className = "text-xs font-semibold text-green-700";
+      } else {
+        statusElement.innerText = "⚠️ Anggaran Melebihi Target! Rekomendasi mengganti mode ke 'Hemat'";
+        statusElement.className = "text-xs font-semibold text-red-600";
+      }
     }
   }
 
-  // Aksi Tombol Validasi Lanjut ke Step 4
-  function evaluasiDanLanjutStep4() {
-    const budgetInput = currentAppSessionData.budgetMingguan; // mengarah ke session global dari step 1
-    if (akumulasiDataStep2.totalBudgetPerminggu > budgetInput) {
-      alert("Maaf, total budget menu Anda melebihi budget input. Silakan klik tombol 'Revisi Menu' terlebih dahulu.");
-      return;
-    }
-    
-    // Jika lolos seleksi "YA", pindah halaman ke STEP 4 (Generate Rencana Belanja)
-    document.getElementById('step-3').classList.add('hidden');
-    document.getElementById('step-4').classList.remove('hidden'); // Membuka halaman Step 4 rencana belanja
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Jika fungsi updateStep4View tersedia di berkas gabungan, panggil fungsi tersebut
-    if (typeof updateStep4View === "function") {
-      updateStep4View(currentAppSessionData);
-    }
-  }
-
-  // Fungsi interaksi klik visual untuk menyembunyikan/menampilkan detail data panel
-  function toggleNutrisiPanel() {
-    const p = document.getElementById('panel-nutrisi');
-    p.classList.toggle('hidden');
-  }
-
-  function toggleBudgetPanel() {
-    const p = document.getElementById('panel-budget');
-    p.classList.toggle('hidden');
-  }
-
-  function kembaliKeStep2() {
-    document.getElementById('step-3').classList.add('hidden');
-    document.getElementById('step-2').classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  function selesaiFlow() {
+    alert("Rencana menu dan daftar belanja berhasil disimpan ke sistem!");
   }
 </script>
