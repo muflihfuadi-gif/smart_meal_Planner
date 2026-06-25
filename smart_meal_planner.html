@@ -1,739 +1,1928 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Meal Planner - Full Steps 1-4</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Menghilangkan panah default pada tag <summary> di berbagai browser */
-    summary::-webkit-details-marker { display: none; }
-    summary { list-style: none; }
-  </style>
-</head>
-<body class="bg-gray-100 flex flex-col items-center justify-center px-4 py-8 min-h-screen font-sans text-gray-800">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Meal Planner - Full App with Ultimate PDF</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      summary {
+        list-style: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-100 flex flex-col items-center justify-center px-4 py-8 min-h-screen font-sans text-gray-800 relative overflow-x-hidden"
+  >
+    <div
+      id="login-section"
+      class="bg-white w-full max-w-md p-8 rounded-lg shadow-md transition-all duration-300"
+    >
+      <div class="text-center mb-8">
+        <h2 class="text-[#2e8b57] font-bold text-3xl m-0">
+          Smart Meal Planner
+        </h2>
+        <div class="text-gray-500 text-sm mt-2">
+          Masuk untuk mengatur rencana menu mingguan Anda
+        </div>
+      </div>
 
-  <div id="step-1" class="bg-white w-full max-w-md rounded-lg shadow-md p-8 mt-6">
-    <h2 class="text-2xl font-bold text-center text-green-700 mb-5">Smart Meal Planner</h2>
+      <form id="form-login" onsubmit="prosesLogin(event)" class="space-y-5">
+        <div>
+          <label
+            for="login-email"
+            class="block text-xs font-bold text-[#2e8b57] tracking-wide uppercase mb-1.5"
+            >📧 Alamat Email</label
+          >
+          <input
+            type="email"
+            id="login-email"
+            required
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md text-base text-gray-900 focus:outline-none focus:border-[#2e8b57] focus:bg-white transition-all duration-200"
+            placeholder="nama@email.com"
+          />
+        </div>
 
-    <div class="bg-orange-50 border-l-4 border-orange-400 px-4 py-3 mb-6 rounded-r">
-      <h3 class="text-sm font-bold text-red-700 mb-1">Rencanakan Menu Praktis & Sehat!</h3>
-      <p class="text-xs text-gray-500">Bantu kamu menyusun menu mingguan yang lezat sesuai dengan jumlah orang dan budget kamu.</p>
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label
+              for="login-password"
+              class="block text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+              >🔒 Kata Sandi</label
+            >
+            <a
+              href="#"
+              class="text-xs font-medium text-gray-500 hover:text-[#2e8b57] transition-colors"
+              >Lupa sandi?</a
+            >
+          </div>
+          <input
+            type="password"
+            id="login-password"
+            required
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md text-base text-gray-900 focus:outline-none focus:border-[#2e8b57] focus:bg-white transition-all duration-200"
+            placeholder="••••••••"
+          />
+        </div>
+
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            id="remember"
+            class="w-4 h-4 text-[#2e8b57] border-gray-300 rounded focus:ring-[#2e8b57] accent-[#2e8b57]"
+          />
+          <label for="remember" class="ml-2 text-sm text-gray-600 select-none"
+            >Ingat akun saya</label
+          >
+        </div>
+
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="w-full py-3 bg-[#2e8b57] text-white font-bold text-base rounded shadow-md shadow-green-700/20 hover:opacity-90 transition-opacity focus:outline-none cursor-pointer"
+          >
+            Masuk Sekarang
+          </button>
+        </div>
+      </form>
+
+      <div class="relative flex py-4 items-center my-4">
+        <div class="flex-grow border-t border-gray-200"></div>
+        <span
+          class="flex-shrink mx-4 text-gray-400 text-xs uppercase tracking-wider"
+          >Atau</span
+        >
+        <div class="flex-grow border-t border-gray-200"></div>
+      </div>
+
+      <div class="text-center text-sm text-gray-600">
+        Belum punya akun?
+        <a
+          href="#"
+          onclick="keHalamanSignUp(event)"
+          class="font-bold text-[#2e8b57] hover:underline ml-1"
+          >Daftar di sini</a
+        >
+      </div>
     </div>
 
-    <form id="form-step-1" onsubmit="event.preventDefault();">
-      <div class="mb-4">
-        <label class="block text-sm font-bold text-gray-700 mb-1">Jumlah Individu</label>
-        <input
-          id="input-individu"
-          type="number"
-          placeholder="Contoh: 2"
-          min="1"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600 text-sm"
-        >
+    <div
+      id="signup-section"
+      class="bg-white w-full max-w-md p-8 rounded-lg shadow-md my-8 hidden transition-all duration-300"
+    >
+      <div class="text-center mb-6">
+        <h2 class="text-[#2e8b57] font-bold text-3xl m-0">
+          Smart Meal Planner
+        </h2>
+        <div class="text-gray-500 text-sm mt-2">
+          Mulai perjalanan hidup sehat dan hemat
+        </div>
       </div>
 
-      <div class="mb-4">
-        <label class="block text-sm font-bold text-gray-700 mb-1">Budget Mingguan (Rp)</label>
-        <input
-          id="input-budget"
-          type="number"
-          placeholder="Contoh: 300000"
-          min="1"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600 text-sm"
+      <form id="form-signup" onsubmit="prosesSignUp(event)" class="space-y-4">
+        <div>
+          <label
+            for="signup-name"
+            class="block text-xs font-bold text-[#2e8b57] tracking-wide uppercase mb-1.5"
+            >👤 Nama Lengkap</label
+          >
+          <input
+            type="text"
+            id="signup-name"
+            required
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md text-base text-gray-900 focus:outline-none focus:border-[#2e8b57] focus:bg-white transition-all duration-200"
+            placeholder="Nama lengkap Anda"
+          />
+        </div>
+
+        <div>
+          <label
+            for="signup-email"
+            class="block text-xs font-bold text-[#2e8b57] tracking-wide uppercase mb-1.5"
+            >📧 Alamat Email</label
+          >
+          <input
+            type="email"
+            id="signup-email"
+            required
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md text-base text-gray-900 focus:outline-none focus:border-[#2e8b57] focus:bg-white transition-all duration-200"
+            placeholder="nama@email.com"
+          />
+        </div>
+
+        <div>
+          <label
+            for="signup-password"
+            class="block text-xs font-bold text-[#2e8b57] tracking-wide uppercase mb-1.5"
+            >🔒 Kata Sandi</label
+          >
+          <input
+            type="password"
+            id="signup-password"
+            required
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md text-base text-gray-900 focus:outline-none focus:border-[#2e8b57] focus:bg-white transition-all duration-200"
+            placeholder="Minimal 8 karakter"
+          />
+        </div>
+
+        <div>
+          <label
+            for="signup-password-confirm"
+            class="block text-xs font-bold text-[#2e8b57] tracking-wide uppercase mb-1.5"
+            >🔐 Konfirmasi Kata Sandi</label
+          >
+          <input
+            type="password"
+            id="signup-password-confirm"
+            required
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md text-base text-gray-900 focus:outline-none focus:border-[#2e8b57] focus:bg-white transition-all duration-200"
+            placeholder="Ulangi kata sandi Anda"
+          />
+        </div>
+
+        <div class="flex items-start pt-1">
+          <input
+            type="checkbox"
+            id="terms"
+            required
+            class="mt-1 w-4 h-4 text-[#2e8b57] border-gray-300 rounded focus:ring-[#2e8b57] accent-[#2e8b57]"
+          />
+          <label for="terms" class="ml-2 text-sm text-gray-600 select-none">
+            Saya menyetujui
+            <a href="#" class="text-[#2e8b57] font-medium hover:underline"
+              >Syarat & Ketentuan</a
+            >
+            serta
+            <a href="#" class="text-[#2e8b57] font-medium hover:underline"
+              >Kebijakan Privasi</a
+            >.
+          </label>
+        </div>
+
+        <div class="pt-3">
+          <button
+            type="submit"
+            class="w-full py-3 bg-[#2e8b57] text-white font-bold text-base rounded shadow-md shadow-green-700/20 hover:opacity-90 transition-opacity focus:outline-none cursor-pointer"
+          >
+            Daftar Akun Baru
+          </button>
+        </div>
+      </form>
+
+      <div class="relative flex py-4 items-center my-2">
+        <div class="flex-grow border-t border-gray-200"></div>
+        <span
+          class="flex-shrink mx-4 text-gray-400 text-xs uppercase tracking-wider"
+          >Atau</span
         >
+        <div class="flex-grow border-t border-gray-200"></div>
       </div>
 
-      <div class="mb-4">
-        <label class="block text-sm font-bold text-gray-700 mb-1">Mode Nutrisi</label>
-        <select
-          id="select-nutrisi"
-          required
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600 text-sm bg-white"
+      <div class="text-center text-sm text-gray-600">
+        Sudah punya akun?
+        <a
+          href="#"
+          onclick="keHalamanLogin(event)"
+          class="font-bold text-[#2e8b57] hover:underline ml-1"
+          >Masuk di sini</a
         >
-          <option value="" disabled selected>Pilih mode menu</option>
-          <option value="hemat">Hemat</option>
-          <option value="seimbang">Seimbang</option>
-        </select>
       </div>
-
-      <div class="flex justify-end gap-3 mt-6">
-        <button
-          type="button"
-          onclick="cekKelengkapanData()"
-          class="px-4 py-2 bg-gray-200 text-gray-700 rounded text-sm cursor-pointer hover:opacity-80"
-        >
-          Cek Kelengkapan
-        </button>
-        <button
-          type="button"
-          onclick="lanjutKeStep2()"
-          class="px-4 py-2 bg-green-700 text-white font-bold rounded text-sm cursor-pointer hover:opacity-80"
-        >
-          Lanjut ke Step 2
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <div id="step-2" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
-    <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">Smart Meal Planner</h2>
-    <div class="text-center text-gray-500 text-sm mt-1 mb-6">Rencana Menu Mingguan Anda (<span id="s2-porsi-badge" class="font-semibold text-emerald-700">1 Orang</span>)</div>
-
-    <div class="space-y-3">
-      <details class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm" open>
-        <summary class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50">
-          <span>Senin</span>
-          <span class="text-[#2e8b57] text-xs transition-transform duration-200 details-open:rotate-180">▼</span>
-        </summary>
-        <div class="p-4 border-t border-gray-200 bg-white space-y-4">
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🍳 Sarapan</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Omelet Sayur</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih (150g)</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">2 Butir Telur</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Kelapa</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Wortel & Sawi</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">☀️ Makan Siang</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Ayam Goreng & Tumis Kangkung</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Dada Ayam (100g)</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Goreng</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Kangkung</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🌙 Makan Malam</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Sup Telur Puyuh & Tahu</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Kentang (di sup)</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Telur Puyuh & Tahu</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Kuah Kaldu Ayam</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Kol & Buncis</span></div>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm">
-        <summary class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50">
-          <span>Selasa</span>
-          <span class="text-[#2e8b57] text-xs">▼</span>
-        </summary>
-        <div class="p-4 border-t border-gray-200 bg-white space-y-4">
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🍳 Sarapan</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Bubur Oatmeal Instan Polos & 1 Telur Rebus</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Oatmeal</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Telur Rebus</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Kuning Telur</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Kuning Telur</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">☀️ Makan Siang</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Nasi Putih, Orek Tempe Kering, & Sayur Bening Bayam</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih & Pati Sayur</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Tempe</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Goreng</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Bayam & Tempe</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🌙 Makan Malam</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Tahu Goreng Tepung & Sambal Korek + Lalapan Timun</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Tepung & Nasi</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Tahu</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Goreng</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Cabai Segar & Timun</span></div>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm">
-        <summary class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50">
-          <span>Rabu</span>
-          <span class="text-[#2e8b57] text-xs">▼</span>
-        </summary>
-        <div class="p-4 border-t border-gray-200 bg-white space-y-4">
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🍳 Sarapan</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Roti Tawar Putih (2 Lembar) + Olesan Mentega & Gula/SKM</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Roti Tawar Putih & Gula/SKM</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Roti Tawar Putih (sedikit)</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Mentega</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Roti Tawar & Mentega (Fortifikasi)</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">☀️ Makan Siang</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Nasi Putih + Tumis Sawi Hijau & Telur Dadar (1 butir)</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Telur Dadar</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Dadar</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Sawi Hijau</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🌙 Makan Malam</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Tumis Tahu & Toge Saus Tiram</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Toge & Saus Tiram</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Tahu</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Tumis</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Toge & Tahu</span></div>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm">
-        <summary class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50">
-          <span>Kamis</span>
-          <span class="text-[#2e8b57] text-xs">▼</span>
-        </summary>
-        <div class="p-4 border-t border-gray-200 bg-white space-y-4">
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🍳 Sarapan</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Pisang Rebus/Kukus (2 Buah) + 1 Gelas Teh Manis Hangat</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Pisang & Gula Teh</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Pisang (Sangat Sedikit)</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Tidak Ada</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Pisang Kepok/Raja</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">☀️ Makan Siang</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Nasi Putih + Hati Ayam Goreng & Lalapan Kubis</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Hati Ayam</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Goreng</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Hati Ayam & Kubis</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🌙 Makan Malam</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Sup Makaroni Ceker Ayam & Wortel</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Makaroni</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Ceker Ayam</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Ceker Ayam & Minyak Sup</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Wortel & Ceker Ayam</span></div>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm">
-        <summary class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50">
-          <span>Jumat</span>
-          <span class="text-[#2e8b57] text-xs">▼</span>
-        </summary>
-        <div class="p-4 border-t border-gray-200 bg-white space-y-4">
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🍳 Sarapan</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Telur Setengah Matang (2 butir) + Taburan Merica & Kecap Asin</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Kecap Asin (Sangat Sedikit)</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Telur Setengah Matang</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Kuning Telur</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Kuning Telur</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">☀️ Makan Siang</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Nasi Putih + Sarden Kaleng & Tumis Kacang Panjang</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Sarden Kaleng</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Sarden Kaleng & Minyak Tumis</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Tulang Ikan Sarden & Kacang Panjang</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🌙 Makan Malam</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Sisa Sarden Kaleng Siang + Nikmati dengan Kerupuk</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih & Kerupuk</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Sarden Kaleng</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Sarden Kaleng & Minyak Kerupuk</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Sarden Kaleng</span></div>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm">
-        <summary class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50">
-          <span>Sabtu</span>
-          <span class="text-[#2e8b57] text-xs">▼</span>
-        </summary>
-        <div class="p-4 border-t border-gray-200 bg-white space-y-4">
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🍳 Sarapan</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Nasi Goreng Kosan (Nasi Sisa Semalam + 1 Telur + Bawang)</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Telur</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Goreng & Kuning Telur</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Bawang Merah & Bawang Putih</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">☀️ Makan Siang</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Nasi Putih + Tempe Goreng Tepung + Sayur Asem Jakarta</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih, Tepung, Jagung & Melinjo</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Tempe</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Goreng</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Kacang Panjang, Daun Melinjo, dll</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🌙 Makan Malam</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Tumis Jamur Tiram & Tahu Putih</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Jamur Tiram (Sedikit)</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Tahu Putih & Jamur Tiram</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Minyak Tumis</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Jamur Tiram & Tahu Putih</span></div>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm">
-        <summary class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50">
-          <span>Minggu</span>
-          <span class="text-[#2e8b57] text-xs">▼</span>
-        </summary>
-        <div class="p-4 border-t border-gray-200 bg-white space-y-4">
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🍳 Sarapan</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Singkong Rebus / Ubi Cilembu Bakar</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Singkong / Ubi Jalar</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Ubi / Singkong (Sangat Sedikit)</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Tidak Ada</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Ubi Cilembu / Singkong</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">☀️ Makan Siang</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Nasi Putih + Semur Tahu & Telur Puyuh (3-4 butir)</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Nasi Putih</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Telur Puyuh & Tahu</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Kuning Telur Puyuh & Minyak Tumis</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Telur Puyuh & Tahu</span></div>
-            </div>
-          </div>
-          <div class="border-t border-dashed border-gray-200"></div>
-          <div>
-            <span class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase">🌙 Makan Malam</span>
-            <p class="text-base font-semibold text-gray-900 my-1">Sup Telur Kocok + Irisan Daun Bawang</p>
-            <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2">
-              <div class="text-xs text-gray-600">🍞 Karbo: <span class="font-medium text-gray-800">Air Sup / Pengental Maizena</span></div>
-              <div class="text-xs text-gray-600">🍗 Protein: <span class="font-medium text-gray-800">Telur Kocok</span></div>
-              <div class="text-xs text-gray-600">🥑 Lemak: <span class="font-medium text-gray-800">Kuning Telur</span></div>
-              <div class="text-xs text-gray-600">🥕 Mikronutrien: <span class="font-medium text-gray-800">Telur & Daun Bawang</span></div>
-            </div>
-          </div>
-        </div>
-      </details>
     </div>
 
-    <div class="flex justify-between items-center mt-8">
-      <button 
-        type="button" 
-        onclick="kembaliKeStep1()"
-        class="px-5 py-2.5 bg-gray-200 text-gray-700 font-medium text-sm rounded hover:opacity-80 transition-opacity cursor-pointer"
+    <div
+      id="step-1"
+      class="bg-white w-full max-w-md rounded-lg shadow-md p-8 mt-6 hidden transition-all duration-300"
+    >
+      <h2 class="text-2xl font-bold text-center text-green-700 mb-5">
+        Smart Meal Planner
+      </h2>
+
+      <div
+        id="welcome-banner"
+        class="text-center font-semibold text-gray-700 mb-4 text-sm hidden"
       >
-        Kembali
-      </button>
-      <button 
-        type="button" 
-        onclick="lanjutKeStep3()"
-        class="px-5 py-2.5 bg-[#2e8b57] text-white font-bold text-sm rounded shadow-md shadow-green-700/20 hover:opacity-90 transition-opacity cursor-pointer"
+        Selamat datang,
+        <span id="display-username" class="text-green-700"></span>!
+      </div>
+
+      <div
+        class="bg-orange-50 border-l-4 border-orange-400 px-4 py-3 mb-6 rounded-r"
       >
-        Lanjut ke Step 3
-      </button>
-    </div>
-  </div>
-
-  <div id="step-3" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
-    <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">Smart Meal Planner</h2>
-    <div class="text-center text-gray-500 text-sm mt-1 mb-6">Daftar Belanja & Estimasi Anggaran</div>
-
-    <div class="bg-emerald-50 border-l-4 border-emerald-500 px-4 py-3 mb-6 rounded-r grid grid-cols-2 gap-2">
-      <div>
-        <span class="text-xs text-gray-500 block">Target Budget Anda:</span>
-        <span id="summary-target-budget" class="text-sm font-bold text-gray-900">Rp 0</span>
-      </div>
-      <div>
-        <span class="text-xs text-gray-500 block">Total Estimasi Belanja:</span>
-        <span id="summary-total-belanja" class="text-sm font-bold text-emerald-700">Rp 0</span>
-      </div>
-      <div class="col-span-2 border-t border-gray-200 pt-2 mt-1">
-        <span id="summary-status-budget" class="text-xs font-semibold text-green-700">✓ Anggaran Aman</span>
-      </div>
-    </div>
-
-    <div class="space-y-4">
-      <div class="border border-gray-200 rounded-md p-4 bg-white">
-        <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
-          <span>🍗 Sumber Protein</span>
-          <span id="s3-cost-protein" class="text-xs font-semibold text-emerald-700">Rp 0</span>
-        </h4>
-        <ul class="space-y-1.5 text-xs text-gray-600">
-          <li class="flex justify-between"><span>• Dada Ayam (<span id="s3-qty-ayam">500</span>g)</span></li>
-          <li class="flex justify-between"><span>• Telur Ayam (<span id="s3-qty-telur">1</span> kg)</span></li>
-          <li class="flex justify-between"><span>• Telur Puyuh, Sarden, Tahu & Tempe</span></li>
-        </ul>
-      </div>
-
-      <div class="border border-gray-200 rounded-md p-4 bg-white">
-        <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
-          <span>🍞 Karbohidrat & Sembako</span>
-          <span id="s3-cost-karbo" class="text-xs font-semibold text-emerald-700">Rp 0</span>
-        </h4>
-        <ul class="space-y-1.5 text-xs text-gray-600">
-          <li class="flex justify-between"><span>• Beras Putih Premium (<span id="s3-qty-beras">5</span> kg)</span></li>
-          <li class="flex justify-between"><span>• Oatmeal Instan, Roti Tawar & Ubi</span></li>
-        </ul>
-      </div>
-
-      <div class="border border-gray-200 rounded-md p-4 bg-white">
-        <h4 class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between">
-          <span>🥕 Sayuran, Bumbu & Lainnya</span>
-          <span id="s3-cost-mikro" class="text-xs font-semibold text-emerald-700">Rp 0</span>
-        </h4>
-        <ul class="space-y-1.5 text-xs text-gray-600">
-          <li class="flex justify-between"><span>• Bayam, Kangkung, Sawi, Wortel & Jamur</span></li>
-          <li class="flex justify-between"><span>• Paket Bumbu Instan & Minyak Goreng</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="flex justify-between items-center mt-8">
-      <button 
-        type="button" 
-        onclick="kembaliKeStep2()"
-        class="px-5 py-2.5 bg-gray-200 text-gray-700 font-medium text-sm rounded hover:opacity-80 transition-opacity cursor-pointer"
-      >
-        Kembali ke Step 2
-      </button>
-      <button 
-        type="button" 
-        onclick="lanjutKeStep4()"
-        class="px-5 py-2.5 bg-orange-500 text-white font-bold text-sm rounded shadow-md shadow-orange-700/20 hover:opacity-90 transition-opacity cursor-pointer"
-      >
-        Lanjut ke STEP 4 ➔
-      </button>
-    </div>
-  </div>
-
-  <div id="step-4" class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden">
-    <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">STEP 4</h2>
-    <div class="text-center text-gray-500 text-sm mt-1 mb-6">Generate Rencana Belanja Final</div>
-
-    <div class="space-y-4 mb-6">
-      <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-        <h3 class="font-bold text-sm text-gray-800 mb-3 flex items-center gap-1.5">
-          💰 Budgeting: Rincian Harga Per Kategori
+        <h3 class="text-sm font-bold text-red-700 mb-1">
+          Rencanakan Menu Praktis & Sehat!
         </h3>
-        <div class="space-y-2 text-xs">
-          <div class="flex justify-between border-b pb-1.5 border-gray-200">
-            <span class="text-gray-600">Total Kebutuhan Karbohidrat</span>
-            <span class="font-semibold text-gray-800" id="s4-cost-karbo">Rp 0</span>
-          </div>
-          <div class="flex justify-between border-b pb-1.5 border-gray-200">
-            <span class="text-gray-600">Total Kebutuhan Protein</span>
-            <span class="font-semibold text-gray-800" id="s4-cost-protein">Rp 0</span>
-          </div>
-          <div class="flex justify-between border-b pb-1.5 border-gray-200">
-            <span class="text-gray-600">Total Mikronutrien, Sayur & Bumbu</span>
-            <span class="font-semibold text-gray-800" id="s4-cost-mikro">Rp 0</span>
-          </div>
-        </div>
-        
-        <div class="mt-4 pt-3 border-t border-dashed border-gray-300 text-xs">
-          <div class="flex justify-between items-center bg-white p-2 rounded border">
-            <span class="font-medium text-gray-700">Total Biaya Belanja Akhir:</span>
-            <span class="font-bold text-emerald-700 text-sm" id="s4-total-belanja">Rp 0</span>
-          </div>
-          <div class="flex justify-between items-center mt-1.5 px-2 text-[11px] text-gray-500">
-            <span>Batas Anggaran Maksimal (Input Step 1):</span>
-            <span class="font-semibold text-gray-700" id="s4-budget-input">Rp 0</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-        <h3 class="font-bold text-sm text-gray-800 mb-2 flex items-center gap-1.5">
-          🛒 Rencana Kuantitas Belanja (Sesuai Gizi & Porsi)
-        </h3>
-        <p class="text-[11px] text-gray-500 mb-3 leading-relaxed">
-          Kuantitas di bawah ini dihitung otomatis berdasarkan menu harian di **STEP 2** dan kebutuhan makro/mikronutrien pada **STEP 3**.
+        <p class="text-xs text-gray-500">
+          Bantu kamu menyusun menu mingguan yang lezat sesuai dengan jumlah
+          orang dan budget kamu.
         </p>
-        <ul class="space-y-2 text-xs text-gray-700">
-          <li class="flex items-center gap-2 bg-white p-2 rounded border border-gray-100">
-            <span class="text-emerald-600">✔</span>
-            <span>Beras Premium & Sembako Karbo: <span id="s4-qty-karbo-text" class="font-bold">0 kg</span></span>
-          </li>
-          <li class="flex items-center gap-2 bg-white p-2 rounded border border-gray-100">
-            <span class="text-emerald-600">✔</span>
-            <span>Dada Ayam & Telur Unggas: <span id="s4-qty-protein-text" class="font-bold">0 kg</span></span>
-          </li>
-          <li class="flex items-center gap-2 bg-white p-2 rounded border border-gray-100">
-            <span class="text-emerald-600">✔</span>
-            <span>Paket Sayuran Hijau & Bumbu Dapur: <span id="s4-qty-sayur-text" class="font-bold">0 Paket</span></span>
-          </li>
-        </ul>
+      </div>
+
+      <form id="form-step-1" onsubmit="event.preventDefault()">
+        <div class="mb-4">
+          <label
+            for="input-individu"
+            class="block text-sm font-bold text-gray-700 mb-1"
+            >Jumlah Individu</label
+          >
+          <input
+            id="input-individu"
+            type="number"
+            placeholder="Contoh: 2"
+            min="1"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600 text-sm"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="input-budget"
+            class="block text-sm font-bold text-gray-700 mb-1"
+            >Budget Mingguan (Rp)</label
+          >
+          <input
+            id="input-budget"
+            type="number"
+            placeholder="Contoh: 300000"
+            min="1"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600 text-sm"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="select-nutrisi"
+            class="block text-sm font-bold text-gray-700 mb-1"
+            >Mode Nutrisi</label
+          >
+          <select
+            id="select-nutrisi"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600 text-sm bg-white"
+          >
+            <option value="" disabled selected>Pilih mode menu</option>
+            <option value="hemat">Hemat</option>
+            <option value="seimbang">Seimbang</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6">
+          <button
+            type="button"
+            onclick="cekKelengkapanData()"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded text-sm cursor-pointer hover:opacity-80"
+          >
+            Cek Kelengkapan
+          </button>
+          <button
+            type="button"
+            onclick="lanjutKeStep2()"
+            class="px-4 py-2 bg-green-700 text-white font-bold rounded text-sm cursor-pointer hover:opacity-80"
+          >
+            Lanjut ke Step 2
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div
+      id="step-2"
+      class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden transition-all duration-300"
+    >
+      <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">
+        Smart Meal Planner
+      </h2>
+      <div class="text-center text-gray-500 text-sm mt-1 mb-6">
+        Rencana Menu Mingguan Anda
+      </div>
+
+      <div class="space-y-3">
+        <details
+          class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm"
+          open
+        >
+          <summary
+            class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50"
+          >
+            <span>Senin</span>
+            <span
+              class="text-[#2e8b57] text-xs transition-transform duration-200 details-open:rotate-180"
+              >▼</span
+            >
+          </summary>
+          <div class="p-4 border-t border-gray-200 bg-white space-y-4">
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🍳 Sarapan</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Omelet Sayur
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Nasi Putih (150g)</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">2 Butir Telur</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Kelapa</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Wortel & Sawi</span>
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >☀️ Makan Siang</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Ayam Goreng & Tumis Kangkung
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Nasi Putih</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800"
+                    >Dada Ayam (100g)</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Goreng</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Kangkung</span>
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🌙 Makan Malam</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Sup Telur Puyuh & Tahu
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Kentang (di sup)</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800"
+                    >Telur Puyuh & Tahu</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Kuah Kaldu Ayam</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Kol & Buncis</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details
+          class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm"
+        >
+          <summary
+            class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50"
+          >
+            <span>Selasa</span>
+            <span class="text-[#2e8b57] text-xs">▼</span>
+          </summary>
+          <div class="p-4 border-t border-gray-200 bg-white space-y-4">
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🍳 Sarapan</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Bubur Oatmeal Instan Polos & 1 Telur Rebus
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Oatmeal</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Telur Rebus</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Kuning Telur</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Kuning Telur</span>
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >☀️ Makan Siang</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Nasi Putih, Orek Tempe Kering, & Sayur Bening Bayam
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Nasi Putih & Pati Sayur</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Tempe</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Goreng</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Bayam & Tempe</span>
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🌙 Makan Malam</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Tahu Goreng Tepung & Sambal Korek + Lalapan Timun
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Tepung & Nasi</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Tahu</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Goreng</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Cabai Segar & Timun</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details
+          class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm"
+        >
+          <summary
+            class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50"
+          >
+            <span>Rabu</span>
+            <span class="text-[#2e8b57] text-xs">▼</span>
+          </summary>
+          <div class="p-4 border-t border-gray-200 bg-white space-y-4">
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🍳 Sarapan</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Roti Tawar Putih (2 Lembar) + Olesan Mentega & Gula/SKM
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Roti Tawar Putih & Gula/SKM</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800"
+                    >Roti Tawar Putih (sedikit)</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Mentega</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Roti Tawar & Mentega (Fortifikasi)</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >☀️ Makan Siang</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Nasi Putih + Tumis Sawi Hijau & Telur Dadar (1 butir)
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Nasi Putih</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Telur Dadar</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Dadar</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Sawi Hijau</span>
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🌙 Makan Malam</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Tumis Tahu & Toge Saus Tiram
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Toge & Saus Tiram</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Tahu</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Tumis</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Toge & Tahu</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details
+          class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm"
+        >
+          <summary
+            class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50"
+          >
+            <span>Kamis</span>
+            <span class="text-[#2e8b57] text-xs">▼</span>
+          </summary>
+          <div class="p-4 border-t border-gray-200 bg-white space-y-4">
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🍳 Sarapan</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Pisang Rebus/Kukus (2 Buah) + 1 Gelas Teh Manis Hangat
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Pisang & Gula Teh</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800"
+                    >Pisang (Sangat Sedikit)</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Tidak Ada</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Pisang Kepok/Raja</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >☀️ Makan Siang</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Nasi Putih + Hati Ayam Goreng & Lalapan Kubis
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Nasi Putih</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Hati Ayam</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Goreng</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Hati Ayam & Kubis</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🌙 Makan Malam</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Sup Makaroni Ceker Ayam & Wortel
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Makaroni</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Ceker Ayam</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800"
+                    >Ceker Ayam & Minyak Sup</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Wortel & Ceker Ayam</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details
+          class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm"
+        >
+          <summary
+            class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50"
+          >
+            <span>Jumat</span>
+            <span class="text-[#2e8b57] text-xs">▼</span>
+          </summary>
+          <div class="p-4 border-t border-gray-200 bg-white space-y-4">
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🍳 Sarapan</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Telur Setengah Matang (2 butir) + Taburan Merica & Kecap Asin
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Kecap Asin (Sangat Sedikit)</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800"
+                    >Telur Setengah Matang</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Kuning Telur</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Kuning Telur</span>
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >☀️ Makan Siang</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Nasi Putih + Sarden Kaleng & Tumis Kacang Panjang
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Nasi Putih</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Sarden Kaleng</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800"
+                    >Sarden Kaleng & Minyak Tumis</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Tulang Ikan Sarden & Kacang Panjang</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🌙 Makan Malam</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Sisa Sarden Kaleng Siang + Nikmati dengan Kerupuk
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Nasi Putih & Kerupuk</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Sarden Kaleng</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800"
+                    >Sarden Kaleng & Minyak Kerupuk</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800">Sarden Kaleng</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details
+          class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm"
+        >
+          <summary
+            class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50"
+          >
+            <span>Sabtu</span>
+            <span class="text-[#2e8b57] text-xs">▼</span>
+          </summary>
+          <div class="p-4 border-t border-gray-200 bg-white space-y-4">
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🍳 Sarapan</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Nasi Goreng Kosan (Nasi Sisa Semalam + 1 Telur + Bawang)
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Nasi Putih</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Telur</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800"
+                    >Minyak Goreng & Kuning Telur</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Bawang Merah & Bawang Putih</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >☀️ Makan Siang</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Nasi Putih + Tempe Goreng Tepung + Sayur Asem Jakarta
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Nasi Putih, Tepung, Jagung & Melinjo</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Tempe</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Goreng</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Kacang Panjang, Daun Melinjo, dll</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🌙 Makan Malam</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Tumis Jamur Tiram & Tahu Putih
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Jamur Tiram (Sedikit)</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800"
+                    >Tahu Putih & Jamur Tiram</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Minyak Tumis</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Jamur Tiram & Tahu Putih</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details
+          class="bg-gray-50 border border-gray-200 rounded-md overflow-hidden transition-all duration-300 open:border-[#2e8b57] open:shadow-sm"
+        >
+          <summary
+            class="p-4 font-bold text-base cursor-pointer bg-white flex justify-between items-center select-none hover:bg-gray-50"
+          >
+            <span>Minggu</span>
+            <span class="text-[#2e8b57] text-xs">▼</span>
+          </summary>
+          <div class="p-4 border-t border-gray-200 bg-white space-y-4">
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🍳 Sarapan</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Singkong Rebus / Ubi Cilembu Bakar
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Singkong / Ubi Jalar</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800"
+                    >Ubi / Singkong (Sangat Sedikit)</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Tidak Ada</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Ubi Cilembu / Singkong</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >☀️ Makan Siang</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Nasi Putih + Semur Tahu & Telur Puyuh (3-4 butir)
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800">Nasi Putih</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800"
+                    >Telur Puyuh & Tahu</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800"
+                    >Kuning Telur Puyuh & Minyak Tumis</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Telur Puyuh & Tahu</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t border-dashed border-gray-200"></div>
+            <div>
+              <span
+                class="text-xs font-bold text-[#2e8b57] tracking-wide uppercase"
+                >🌙 Makan Malam</span
+              >
+              <p class="text-base font-semibold text-gray-900 my-1">
+                Sup Telur Kocok + Irisan Daun Bawang
+              </p>
+              <div
+                class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded border border-gray-100 mt-2"
+              >
+                <div class="text-xs text-gray-600">
+                  🍞 Karbo:
+                  <span class="font-medium text-gray-800"
+                    >Air Sup / Pengental Maizena</span
+                  >
+                </div>
+                <div class="text-xs text-gray-600">
+                  🍗 Protein:
+                  <span class="font-medium text-gray-800">Telur Kocok</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥑 Lemak:
+                  <span class="font-medium text-gray-800">Kuning Telur</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  🥕 Mikronutrien:
+                  <span class="font-medium text-gray-800"
+                    >Telur & Daun Bawang</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="flex justify-between items-center mt-8">
+        <button
+          type="button"
+          onclick="kembaliKeStep1()"
+          class="px-5 py-2.5 bg-gray-200 text-gray-700 font-medium text-sm rounded hover:opacity-80 transition-opacity cursor-pointer"
+        >
+          Kembali
+        </button>
+        <button
+          type="button"
+          onclick="lanjutKeStep3()"
+          class="px-5 py-2.5 bg-[#2e8b57] text-white font-bold text-sm rounded shadow-md shadow-green-700/20 hover:opacity-90 transition-opacity cursor-pointer"
+        >
+          Lanjut ke Step 3
+        </button>
       </div>
     </div>
 
-    <div id="s4-status-verifikasi" class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center mb-6">
-      <div id="s4-status-text" class="text-xs"></div>
+    <div
+      id="step-3"
+      class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden transition-all duration-300"
+    >
+      <h2 class="text-[#2e8b57] text-center font-bold text-2xl m-0">
+        Smart Meal Planner
+      </h2>
+      <div class="text-center text-gray-500 text-sm mt-1 mb-6">
+        Daftar Belanja & Estimasi Anggaran
+      </div>
+
+      <div
+        class="bg-emerald-50 border-l-4 border-emerald-500 px-4 py-3 mb-6 rounded-r grid grid-cols-2 gap-2"
+      >
+        <div>
+          <span class="text-xs text-gray-500 block">Target Budget Anda:</span>
+          <span
+            id="summary-target-budget"
+            class="text-sm font-bold text-gray-900"
+            >Rp 0</span
+          >
+        </div>
+        <div>
+          <span class="text-xs text-gray-500 block"
+            >Total Estimasi Belanja:</span
+          >
+          <span
+            id="summary-total-belanja"
+            class="text-sm font-bold text-emerald-700"
+            >Rp 245.000</span
+          >
+        </div>
+        <div class="col-span-2 border-t border-gray-200 pt-2 mt-1">
+          <span
+            id="summary-status-budget"
+            class="text-xs font-semibold text-green-700"
+            >✓ Anggaran Aman (Sesuai Batas Hemat/Seimbang)</span
+          >
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="border border-gray-200 rounded-md p-4 bg-white">
+          <h4
+            class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between"
+          >
+            <span>🍗 Sumber Protein</span>
+            <span class="text-xs text-gray-400 font-normal">Estimasi</span>
+          </h4>
+          <ul class="space-y-1.5 text-xs text-gray-600">
+            <li class="flex justify-between">
+              <span>• Dada Ayam (500g)</span
+              ><span class="font-medium text-gray-800">Rp 28.000</span>
+            </li>
+            <li class="flex justify-between">
+              <span>• Telur Ayam (1 kg)</span
+              ><span class="font-medium text-gray-800">Rp 27.000</span>
+            </li>
+            <li class="flex justify-between">
+              <span>• Telur Puyuh & Sarden Kaleng</span
+              ><span class="font-medium text-gray-800">Rp 35.000</span>
+            </li>
+            <li class="flex justify-between">
+              <span>• Tahu, Tempe, & Jamur Tiram</span
+              ><span class="font-medium text-gray-800">Rp 20.000</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="border border-gray-200 rounded-md p-4 bg-white">
+          <h4
+            class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between"
+          >
+            <span>🍞 Karbohidrat & Sembako</span>
+            <span class="text-xs text-gray-400 font-normal">Estimasi</span>
+          </h4>
+          <ul class="space-y-1.5 text-xs text-gray-600">
+            <li class="flex justify-between">
+              <span>• Beras Putih (5 kg)</span
+              ><span class="font-medium text-gray-800">Rp 75.000</span>
+            </li>
+            <li class="flex justify-between">
+              <span>• Oatmeal Instan & Roti Tawar</span
+              ><span class="font-medium text-gray-800">Rp 25.000</span>
+            </li>
+            <li class="flex justify-between">
+              <span>• Singkong/Ubi & Makaroni</span
+              ><span class="font-medium text-gray-800">Rp 15.000</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="border border-gray-200 rounded-md p-4 bg-white">
+          <h4
+            class="font-bold text-sm text-gray-900 mb-2 pb-1 border-b border-gray-100 flex justify-between"
+          >
+            <span>🥕 Sayuran, Bumbu & Lainnya</span>
+            <span class="text-xs text-gray-400 font-normal">Estimasi</span>
+          </h4>
+          <ul class="space-y-1.5 text-xs text-gray-600">
+            <li class="flex justify-between">
+              <span>• Sayuran (Bayam, Kangkung, Sawi, Wortel)</span
+              ><span class="font-medium text-gray-800">Rp 12.000</span>
+            </li>
+            <li class="flex justify-between">
+              <span>• Paket Bumbu Sayur Asem & Sop</span
+              ><span class="font-medium text-gray-800">Rp 8.000</span>
+            </li>
+            <li class="flex justify-between">
+              <span>• Minyak Kelapa/Minyak Goreng & Mentega</span
+              ><span class="font-medium text-gray-800">Rp 15.000</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center mt-8">
+        <button
+          type="button"
+          onclick="kembaliKeStep2()"
+          class="px-5 py-2.5 bg-gray-200 text-gray-700 font-medium text-sm rounded hover:opacity-80 transition-opacity cursor-pointer"
+        >
+          Kembali ke Step 2
+        </button>
+        <button
+          type="button"
+          onclick="selesaiFlow()"
+          class="px-5 py-2.5 bg-orange-500 text-white font-bold text-sm rounded shadow-md shadow-orange-700/20 hover:opacity-90 transition-opacity cursor-pointer"
+        >
+          Lanjut ke STEP 4
+        </button>
+      </div>
     </div>
 
-    <div id="pdf-success-banner" class="hidden bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-3 text-xs font-semibold text-center mb-6">
-      ✅ File PDF Tersimpan! Dokumen rencana belanja berhasil dirender ke sistem cetak lokal.
+    <div
+      id="step-4"
+      class="bg-white w-full max-w-lg p-8 rounded-lg shadow-md mt-7 hidden transition-all duration-300"
+    >
+      <div class="text-center mb-6">
+        <h2 class="text-xl font-bold text-green-600 tracking-wide mb-1">
+          STEP 4
+        </h2>
+        <div class="text-gray-500 text-sm">
+          Rencana Menu Mingguan Anda Telah Dibuat
+        </div>
+      </div>
+
+      <div
+        class="border border-gray-200 rounded-md p-4 mb-4 bg-white shadow-sm"
+      >
+        <div class="space-y-1 text-sm">
+          <div class="flex justify-between font-bold text-gray-600 p-2">
+            <span>Target Budget Mingguan Anda</span>
+            <span id="step4-target-budget">Rp 0</span>
+          </div>
+          <div
+            class="flex justify-between font-bold text-green-700 bg-green-50 p-2 rounded"
+          >
+            <span>Total Estimasi Belanja</span>
+            <span id="step4-total-belanja">Rp 245.000</span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="step4-alert-box"
+        class="bg-green-50 border border-green-200 text-green-800 rounded p-3 text-center text-sm mb-6"
+      >
+        <div id="step4-alert-title" class="font-bold mb-1">
+          ✓ Rencana Belanja Aman!
+        </div>
+        <span id="step4-alert-message"
+          >Sisa budget sebesar
+          <span id="step4-sisa-budget" class="font-bold">Rp 0</span> dapat Anda
+          simpan.</span
+        >
+      </div>
+
+      <div class="space-y-3">
+        <button
+          type="button"
+          onclick="downloadPDF()"
+          class="w-full py-3 bg-blue-600 text-white font-bold text-sm rounded shadow hover:bg-blue-700 transition flex justify-center items-center cursor-pointer"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+            ></path>
+          </svg>
+          Download PDF (Daftar Belanja & Menu)
+        </button>
+        <button
+          type="button"
+          onclick="mulaiUlangFlow()"
+          class="w-full py-3 bg-gray-800 text-white font-bold text-sm rounded shadow hover:bg-gray-900 transition flex justify-center items-center cursor-pointer"
+        >
+          Kembali ke STEP 1 (Buat Ulang)
+        </button>
+      </div>
     </div>
 
-    <div class="space-y-2">
-      <button 
-        type="button" 
-        onclick="simpanSebagaiPDF()" 
-        class="w-full py-3 bg-blue-600 text-white font-bold text-sm rounded shadow-md hover:bg-blue-700 transition flex items-center justify-center gap-2 cursor-pointer"
-      >
-        📄 Tombol Simpan sebagai PDF
-      </button>
+    <div
+      style="
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        width: 800px;
+        z-index: -1;
+      "
+    >
+      <div id="print-template" class="bg-white text-gray-800 p-10 font-sans">
+        <div class="text-center mb-6 border-b-2 border-[#2e8b57] pb-4">
+          <h1 class="text-3xl font-bold text-[#2e8b57] mb-1">
+            Smart Meal Planner
+          </h1>
+          <p class="text-gray-500 font-medium">
+            Dokumen Daftar Belanja & Jadwal Menu Mingguan
+          </p>
+        </div>
 
-      <button 
-        type="button" 
-        onclick="kembaliKeStep3()" 
-        class="w-full py-2 bg-gray-100 text-gray-600 font-medium text-xs rounded border border-gray-200 hover:bg-gray-200 transition text-center cursor-pointer"
-      >
-        Kembali ke STEP 3
-      </button>
+        <div
+          class="flex justify-between bg-green-50 p-4 rounded-lg mb-8 border border-green-200 text-sm"
+        >
+          <div>
+            <span class="text-gray-500">Porsi Makan:</span> <br /><strong
+              id="pdf-individu"
+              class="text-lg text-gray-800"
+              >2 Orang</strong
+            >
+          </div>
+          <div>
+            <span class="text-gray-500">Target Budget:</span> <br /><strong
+              id="pdf-budget"
+              class="text-lg text-gray-800"
+              >Rp 0</strong
+            >
+          </div>
+          <div>
+            <span class="text-gray-500">Estimasi Belanja:</span> <br /><strong
+              class="text-lg text-green-700"
+              >Rp 245.000</strong
+            >
+          </div>
+        </div>
 
-      <button 
-        type="button" 
-        onclick="kembaliKeStep1()" 
-        class="w-full py-3 bg-gray-800 text-white font-bold text-sm rounded hover:bg-gray-900 transition flex items-center justify-center gap-2 cursor-pointer mt-4"
-      >
-        🔄 Kembali ke STEP 1 (Loop Program)
-      </button>
+        <h2
+          class="text-xl font-bold text-gray-800 mb-4 bg-gray-100 p-2 rounded"
+        >
+          🛒 DAFTAR BELANJA (Step 3)
+        </h2>
+        <div class="grid grid-cols-2 gap-6 mb-10 text-sm">
+          <div>
+            <h4 class="font-bold text-[#2e8b57] mb-2 border-b pb-1">
+              Sumber Protein
+            </h4>
+            <ul class="space-y-2 text-gray-700">
+              <li>[ ] Dada Ayam (500g) - Rp 28.000</li>
+              <li>[ ] Telur Ayam (1 kg) - Rp 27.000</li>
+              <li>[ ] Telur Puyuh & Sarden - Rp 35.000</li>
+              <li>[ ] Tahu, Tempe, Jamur - Rp 20.000</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold text-[#2e8b57] mb-2 border-b pb-1">
+              Karbo & Sembako
+            </h4>
+            <ul class="space-y-2 text-gray-700">
+              <li>[ ] Beras Putih (5 kg) - Rp 75.000</li>
+              <li>[ ] Oatmeal & Roti Tawar - Rp 25.000</li>
+              <li>[ ] Singkong & Makaroni - Rp 15.000</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold text-[#2e8b57] mb-2 border-b pb-1">
+              Sayur & Bumbu
+            </h4>
+            <ul class="space-y-2 text-gray-700">
+              <li>[ ] Sayuran (Bayam, Sawi, dll) - Rp 12.000</li>
+              <li>[ ] Bumbu Sayur Asem & Sop - Rp 8.000</li>
+              <li>[ ] Minyak & Mentega - Rp 15.000</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2
+          class="text-xl font-bold text-gray-800 mb-4 bg-gray-100 p-2 rounded mt-10"
+        >
+          📅 JADWAL MENU MINGGUAN (Step 2)
+        </h2>
+
+        <div class="grid grid-cols-2 gap-x-6 gap-y-8 text-sm">
+          <div class="border border-gray-200 rounded p-4">
+            <h3
+              class="font-bold text-lg text-white bg-[#2e8b57] p-2 -mx-4 -mt-4 mb-3 rounded-t text-center"
+            >
+              Senin
+            </h3>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Sarapan</span
+              >
+              <p class="font-semibold text-gray-800">Omelet Sayur</p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi Putih | Protein: Telur | Sayur: Wortel, Sawi
+              </p>
+            </div>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Siang</span
+              >
+              <p class="font-semibold text-gray-800">
+                Ayam Goreng & Tumis Kangkung
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi Putih | Protein: Ayam | Sayur: Kangkung
+              </p>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Malam</span
+              >
+              <p class="font-semibold text-gray-800">Sup Telur Puyuh & Tahu</p>
+              <p class="text-xs text-gray-600">
+                Karbo: Kentang | Protein: Puyuh, Tahu | Sayur: Kol, Buncis
+              </p>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded p-4">
+            <h3
+              class="font-bold text-lg text-white bg-[#2e8b57] p-2 -mx-4 -mt-4 mb-3 rounded-t text-center"
+            >
+              Selasa
+            </h3>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Sarapan</span
+              >
+              <p class="font-semibold text-gray-800">
+                Bubur Oatmeal & Telur Rebus
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Oatmeal | Protein: Telur
+              </p>
+            </div>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Siang</span
+              >
+              <p class="font-semibold text-gray-800">
+                Orek Tempe & Sayur Bening Bayam
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi Putih | Protein: Tempe | Sayur: Bayam
+              </p>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Malam</span
+              >
+              <p class="font-semibold text-gray-800">
+                Tahu Goreng & Sambal Korek
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi Putih | Protein: Tahu | Sayur: Timun
+              </p>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded p-4">
+            <h3
+              class="font-bold text-lg text-white bg-[#2e8b57] p-2 -mx-4 -mt-4 mb-3 rounded-t text-center"
+            >
+              Rabu
+            </h3>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Sarapan</span
+              >
+              <p class="font-semibold text-gray-800">
+                Roti Tawar & Olesan Mentega
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Roti Tawar | Lemak: Mentega
+              </p>
+            </div>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Siang</span
+              >
+              <p class="font-semibold text-gray-800">
+                Tumis Sawi Hijau & Telur Dadar
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi Putih | Protein: Telur | Sayur: Sawi Hijau
+              </p>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Malam</span
+              >
+              <p class="font-semibold text-gray-800">
+                Tumis Tahu & Toge Saus Tiram
+              </p>
+              <p class="text-xs text-gray-600">Karbo: Toge | Protein: Tahu</p>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded p-4">
+            <h3
+              class="font-bold text-lg text-white bg-[#2e8b57] p-2 -mx-4 -mt-4 mb-3 rounded-t text-center"
+            >
+              Kamis
+            </h3>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Sarapan</span
+              >
+              <p class="font-semibold text-gray-800">
+                Pisang Rebus & Teh Manis
+              </p>
+              <p class="text-xs text-gray-600">Karbo: Pisang Kepok, Gula</p>
+            </div>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Siang</span
+              >
+              <p class="font-semibold text-gray-800">
+                Hati Ayam Goreng & Lalapan Kubis
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi Putih | Protein: Hati Ayam | Sayur: Kubis
+              </p>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Malam</span
+              >
+              <p class="font-semibold text-gray-800">Sup Makaroni Ceker Ayam</p>
+              <p class="text-xs text-gray-600">
+                Karbo: Makaroni | Protein: Ceker | Sayur: Wortel
+              </p>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded p-4">
+            <h3
+              class="font-bold text-lg text-white bg-[#2e8b57] p-2 -mx-4 -mt-4 mb-3 rounded-t text-center"
+            >
+              Jumat
+            </h3>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Sarapan</span
+              >
+              <p class="font-semibold text-gray-800">Telur Setengah Matang</p>
+              <p class="text-xs text-gray-600">Protein: Telur Ayam</p>
+            </div>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Siang</span
+              >
+              <p class="font-semibold text-gray-800">
+                Sarden Kaleng & Tumis Kacang Panjang
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi | Protein: Sarden | Sayur: Kacang Panjang
+              </p>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Malam</span
+              >
+              <p class="font-semibold text-gray-800">Sisa Sarden & Kerupuk</p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi, Kerupuk | Protein: Sarden
+              </p>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded p-4">
+            <h3
+              class="font-bold text-lg text-white bg-[#2e8b57] p-2 -mx-4 -mt-4 mb-3 rounded-t text-center"
+            >
+              Sabtu
+            </h3>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Sarapan</span
+              >
+              <p class="font-semibold text-gray-800">Nasi Goreng Kosan</p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi | Protein: Telur | Sayur: Bawang
+              </p>
+            </div>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Siang</span
+              >
+              <p class="font-semibold text-gray-800">
+                Tempe Goreng & Sayur Asem
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi, Jagung | Protein: Tempe | Sayur: Melinjo, dll
+              </p>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Malam</span
+              >
+              <p class="font-semibold text-gray-800">
+                Tumis Jamur Tiram & Tahu
+              </p>
+              <p class="text-xs text-gray-600">Karbo: Jamur | Protein: Tahu</p>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded p-4">
+            <h3
+              class="font-bold text-lg text-white bg-[#2e8b57] p-2 -mx-4 -mt-4 mb-3 rounded-t text-center"
+            >
+              Minggu
+            </h3>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Sarapan</span
+              >
+              <p class="font-semibold text-gray-800">
+                Singkong Rebus / Ubi Bakar
+              </p>
+              <p class="text-xs text-gray-600">Karbo: Singkong / Ubi</p>
+            </div>
+            <div class="mb-3">
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Siang</span
+              >
+              <p class="font-semibold text-gray-800">
+                Semur Tahu & Telur Puyuh
+              </p>
+              <p class="text-xs text-gray-600">
+                Karbo: Nasi | Protein: Tahu, Puyuh
+              </p>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase"
+                >Makan Malam</span
+              >
+              <p class="font-semibold text-gray-800">Sup Telur Kocok</p>
+              <p class="text-xs text-gray-600">
+                Protein: Telur | Sayur: Daun Bawang
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <script>
-    // Penampung data JSON State Global Utama aplikasi
-    let currentAppSessionData = {
-      jumlahIndividu: null,
-      budgetMingguan: null,
-      modeNutrisi: null,
-      totalEstimasiBelanja: 0
-    };
-
-    // Mengambil data ter-update dari Form STEP 1
-    function getFormDataJson() {
-      return {
-        jumlahIndividu: document.getElementById('input-individu').value,
-        budgetMingguan: document.getElementById('input-budget').value,
-        modeNutrisi: document.getElementById('select-nutrisi').value
+    <script>
+      // Penampung Data JSON State Global
+      let currentAppSessionData = {
+        user: { isLoggedIn: false, email: "", name: "" },
+        jumlahIndividu: null,
+        budgetMingguan: null,
+        modeNutrisi: null,
+        totalEstimasiBelanja: 245000,
       };
-    }
 
-    // Validasi data input di STEP 1
-    function isDataLengkap(dataJson) {
-      return !!(dataJson.jumlahIndividu && dataJson.budgetMingguan && dataJson.modeNutrisi);
-    }
-
-    // Tombol: Cek Kelengkapan Data
-    function cekKelengkapanData() {
-      const currentData = getFormDataJson();
-      if (isDataLengkap(currentData)) {
-        alert("Data lengkap! Anda siap lanjut ke Step 2.\n\nJSON Data Transfer:\n" + JSON.stringify(currentData, null, 2));
-      } else {
-        alert("⚠️ Alert!\nData Tidak Lengkap. Lengkapi semua kolom input terlebih dahulu!");
-      }
-    }
-
-    // Navigasi ke STEP 2
-    function lanjutKeStep2() {
-      const currentData = getFormDataJson();
-      if (!isDataLengkap(currentData)) {
-        alert("⚠️ Alert!\nData Tidak Lengkap. Lengkapi data sekarang!");
-        return;
+      function keHalamanSignUp(event) {
+        if (event) event.preventDefault();
+        document.getElementById("login-section").classList.add("hidden");
+        document.getElementById("signup-section").classList.remove("hidden");
       }
 
-      // Sinkronisasi data ke JSON Session Global
-      currentAppSessionData.jumlahIndividu = parseInt(currentData.jumlahIndividu);
-      currentAppSessionData.budgetMingguan = parseInt(currentData.budgetMingguan);
-      currentAppSessionData.modeNutrisi = currentData.modeNutrisi;
-
-      // Update Teks badge porsi orang secara dinamis di Step 2
-      document.getElementById('s2-porsi-badge').innerText = currentAppSessionData.jumlahIndividu + " Orang";
-
-      document.getElementById('step-1').classList.add('hidden');
-      document.getElementById('step-2').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Navigasi ke STEP 3 + Pemrosesan Kalkulasi Dinamis Kebutuhan Gizi & Anggaran
-    function lanjutKeStep3() {
-      const orang = currentAppSessionData.jumlahIndividu;
-      const mode = currentAppSessionData.modeNutrisi;
-
-      // Logika Kalkulasi Berbasis Data JSON Input Step 1
-      // Nilai dasar (base) biaya per orang seminggu berdasarkan opsi mode nutrisi
-      let baseProtein = mode === 'seimbang' ? 110000 : 80000;
-      let baseKarbo = mode === 'seimbang' ? 85000 : 65000;
-      let baseMikro = mode === 'seimbang' ? 50000 : 35000;
-
-      let totalProtein = baseProtein * orang;
-      let totalKarbo = baseKarbo * orang;
-      let totalMikro = baseMikro * orang;
-      let totalBelanja = totalProtein + totalKarbo + totalMikro;
-
-      currentAppSessionData.totalEstimasiBelanja = totalBelanja;
-
-      // Render Nilai Dinamis ke Halaman STEP 3
-      document.getElementById('summary-target-budget').innerText = "Rp " + currentAppSessionData.budgetMingguan.toLocaleString('id-ID');
-      document.getElementById('summary-total-belanja').innerText = "Rp " + totalBelanja.toLocaleString('id-ID');
-      
-      document.getElementById('s3-cost-protein').innerText = "Rp " + totalProtein.toLocaleString('id-ID');
-      document.getElementById('s3-cost-karbo').innerText = "Rp " + totalKarbo.toLocaleString('id-ID');
-      document.getElementById('s3-cost-mikro').innerText = "Rp " + totalMikro.toLocaleString('id-ID');
-
-      // Update estimasi teks kuantitas fisik di Step 3 secara proporsional
-      document.getElementById('s3-qty-ayam').innerText = (500 * orang);
-      document.getElementById('s3-qty-telur').innerText = (1 * orang);
-      document.getElementById('s3-qty-beras').innerText = (5 * orang);
-
-      // Evaluasi Awal Kelayakan Budget
-      const statusElement = document.getElementById('summary-status-budget');
-      if (currentAppSessionData.budgetMingguan >= totalBelanja) {
-        statusElement.innerText = "✓ Anggaran Aman (Sesuai Batas " + mode.toUpperCase() + ")";
-        statusElement.className = "text-xs font-semibold text-green-700";
-      } else {
-        statusElement.innerText = "⚠️ Anggaran Melebihi Target! Rekomendasi mengganti mode ke 'Hemat' di Step 1.";
-        statusElement.className = "text-xs font-semibold text-red-600";
+      function keHalamanLogin(event) {
+        if (event) event.preventDefault();
+        document.getElementById("signup-section").classList.add("hidden");
+        document.getElementById("login-section").classList.remove("hidden");
       }
 
-      document.getElementById('step-2').classList.add('hidden');
-      document.getElementById('step-3').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+      function prosesSignUp(event) {
+        event.preventDefault();
+        const emailInput = document.getElementById("signup-email").value;
+        const passwordInput = document.getElementById("signup-password").value;
+        const confirmPassword = document.getElementById(
+          "signup-password-confirm",
+        ).value;
 
-    // Navigasi Terkoneksi dari STEP 3 ke STEP 4 (Pengolahan Cabang Logika Akhir Flowchart)
-    function lanjutKeStep4() {
-      const orang = currentAppSessionData.jumlahIndividu;
-      const mode = currentAppSessionData.modeNutrisi;
-      const budget = currentAppSessionData.budgetMingguan;
-      const totalBelanjaFinal = currentAppSessionData.totalEstimasiBelanja;
+        if (passwordInput !== confirmPassword) {
+          alert("Kata sandi dan konfirmasi tidak cocok!");
+          return;
+        }
 
-      // Membagi distribusi harga sub-kategori item belanja secara dinamis
-      let costProtein = (mode === 'seimbang' ? 110000 : 80000) * orang;
-      let costKarbo = (mode === 'seimbang' ? 85000 : 65000) * orang;
-      let costMikro = (mode === 'seimbang' ? 50000 : 35000) * orang;
-
-      // 1. Sinkronisasi Data Cabang Kiri: Bagian Budgeting Per Item
-      document.getElementById('s4-cost-protein').innerText = "Rp " + costProtein.toLocaleString('id-ID');
-      document.getElementById('s4-cost-karbo').innerText = "Rp " + costKarbo.toLocaleString('id-ID');
-      document.getElementById('s4-cost-mikro').innerText = "Rp " + costMikro.toLocaleString('id-ID');
-      document.getElementById('s4-total-belanja').innerText = "Rp " + totalBelanjaFinal.toLocaleString('id-ID');
-      document.getElementById('s4-budget-input').innerText = "Rp " + budget.toLocaleString('id-ID');
-
-      // 2. Sinkronisasi Data Cabang Kanan: Kuantitas Fisik Berdasarkan Kebutuhan GIZI & Menu Porsi
-      document.getElementById('s4-qty-karbo-text').innerText = (3.5 * orang).toFixed(1) + " kg (Beras & Oats)";
-      document.getElementById('s4-qty-protein-text').innerText = (1.8 * orang).toFixed(1) + " kg (Daging & Telur)";
-      document.getElementById('s4-qty-sayur-text').innerText = (2 * orang) + " Paket Komplit (Sayur & Bumbu)";
-
-      // 3. Logika Evaluasi: Total Biaya Belanja <= Budget Mingguan Anda?
-      const boxVerifikasi = document.getElementById('s4-status-verifikasi');
-      const textVerifikasi = document.getElementById('s4-status-text');
-
-      if (totalBelanjaFinal <= budget) {
-        boxVerifikasi.className = "bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center mb-6";
-        textVerifikasi.innerHTML = `
-          <h4 class="font-bold text-sm text-emerald-900">✓ Verifikasi Kelengkapan Berhasil</h4>
-          <p class="text-gray-700 mt-1">Total Rencana Belanja (Rp ${totalBelanjaFinal.toLocaleString('id-ID')}) memenuhi batas aman alokasi budget Anda (Rp ${budget.toLocaleString('id-ID')}).</p>
-        `;
-      } else {
-        boxVerifikasi.className = "bg-red-50 border border-red-200 rounded-lg p-4 text-center mb-6";
-        textVerifikasi.innerHTML = `
-          <h4 class="font-bold text-sm text-red-900">⚠️ Verifikasi Kelengkapan Gagal</h4>
-          <p class="text-red-700 mt-1">Total Biaya Belanja Belanja (Rp ${totalBelanjaFinal.toLocaleString('id-ID')}) melebihi kapasitas anggaran awal Anda (Rp ${budget.toLocaleString('id-ID')}).</p>
-        `;
+        alert("Pendaftaran berhasil untuk: " + emailInput + "\nSilakan Login.");
+        document.getElementById("form-signup").reset();
+        keHalamanLogin();
       }
 
-      // Sembunyikan banner notifikasi PDF bawaan saat awal masuk halaman
-      document.getElementById('pdf-success-banner').classList.add('hidden');
+      function prosesLogin(event) {
+        event.preventDefault();
+        const emailInput = document.getElementById("login-email").value;
 
-      document.getElementById('step-3').classList.add('hidden');
-      document.getElementById('step-4').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+        currentAppSessionData.user.isLoggedIn = true;
+        currentAppSessionData.user.email = emailInput;
+        const extractedName = emailInput.split("@")[0];
+        currentAppSessionData.user.name = extractedName;
 
-    // Tombol Cetak/Simpan PDF
-    function simpanSebagaiPDF() {
-      document.getElementById('pdf-success-banner').classList.remove('hidden');
-      setTimeout(() => {
-        window.print();
-      }, 300);
-    }
+        document.getElementById("display-username").innerText =
+          currentAppSessionData.user.name;
+        document.getElementById("welcome-banner").classList.remove("hidden");
 
-    // Navigasi Kembali Antar-Step Berantai
-    function kembaliKeStep1() {
-      document.getElementById('step-2').classList.add('hidden');
-      document.getElementById('step-4').classList.add('hidden');
-      document.getElementById('step-1').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+        document.getElementById("login-section").classList.add("hidden");
+        document.getElementById("step-1").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
 
-    function kembaliKeStep2() {
-      document.getElementById('step-3').classList.add('hidden');
-      document.getElementById('step-2').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+      function getFormDataJson() {
+        return {
+          jumlahIndividu: document.getElementById("input-individu").value,
+          budgetMingguan: document.getElementById("input-budget").value,
+          modeNutrisi: document.getElementById("select-nutrisi").value,
+        };
+      }
 
-    function kembaliKeStep3() {
-      document.getElementById('step-4').classList.add('hidden');
-      document.getElementById('step-3').classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  </script>
+      function isDataLengkap(dataJson) {
+        return (
+          dataJson.jumlahIndividu &&
+          dataJson.budgetMingguan &&
+          dataJson.modeNutrisi
+        );
+      }
 
-</body>
+      function cekKelengkapanData() {
+        const currentData = getFormDataJson();
+        if (isDataLengkap(currentData)) {
+          alert(
+            "Data lengkap! Lanjut ke Step 2.\n\nJSON Data:\n" +
+              JSON.stringify(currentData, null, 2),
+          );
+        } else {
+          alert("⚠️ Alert!\nData Tidak Lengkap. Lengkapi data sekarang!");
+        }
+      }
+
+      function lanjutKeStep2() {
+        const currentData = getFormDataJson();
+        if (!isDataLengkap(currentData)) {
+          alert("⚠️ Alert!\nData Tidak Lengkap. Lengkapi data sekarang!");
+          return;
+        }
+        currentAppSessionData.jumlahIndividu = currentData.jumlahIndividu;
+        currentAppSessionData.budgetMingguan = parseInt(
+          currentData.budgetMingguan,
+        );
+        currentAppSessionData.modeNutrisi = currentData.modeNutrisi;
+
+        document.getElementById("step-1").classList.add("hidden");
+        document.getElementById("step-2").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function kembaliKeStep1() {
+        document.getElementById("step-2").classList.add("hidden");
+        document.getElementById("step-1").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function lanjutKeStep3() {
+        document.getElementById("summary-target-budget").innerText =
+          "Rp " + currentAppSessionData.budgetMingguan.toLocaleString("id-ID");
+        const statusElement = document.getElementById("summary-status-budget");
+
+        if (
+          currentAppSessionData.budgetMingguan >=
+          currentAppSessionData.totalEstimasiBelanja
+        ) {
+          statusElement.innerText = "✓ Anggaran Aman";
+          statusElement.className = "text-xs font-semibold text-green-700";
+        } else {
+          const kekurangan = currentAppSessionData.totalEstimasiBelanja - currentAppSessionData.budgetMingguan;
+          statusElement.innerText = `⚠️ Anggaran Anda kurang Rp ${kekurangan.toLocaleString("id-ID")}!`;
+          statusElement.className = "text-xs font-semibold text-red-600";
+        }
+
+        document.getElementById("step-2").classList.add("hidden");
+        document.getElementById("step-3").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function kembaliKeStep2() {
+        document.getElementById("step-3").classList.add("hidden");
+        document.getElementById("step-2").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function selesaiFlow() {
+        const data = currentAppSessionData;
+
+        // Update Step 4 (Layar)
+        document.getElementById("step4-target-budget").innerText =
+          "Rp " + data.budgetMingguan.toLocaleString("id-ID");
+
+        // Update PDF Template Tersembunyi
+        document.getElementById("pdf-budget").innerText =
+          "Rp " + data.budgetMingguan.toLocaleString("id-ID");
+        document.getElementById("pdf-individu").innerText =
+          data.jumlahIndividu + " Orang";
+
+        const sisaBudget = data.budgetMingguan - data.totalEstimasiBelanja;
+        const alertBox = document.getElementById("step4-alert-box");
+        const alertTitle = document.getElementById("step4-alert-title");
+        const alertMessage = document.getElementById("step4-alert-message");
+        const sisaBudgetSpan = document.getElementById("step4-sisa-budget");
+
+        if (sisaBudget >= 0) {
+          alertBox.className =
+            "bg-green-50 border border-green-200 text-green-800 rounded p-3 text-center text-sm mb-6";
+          alertTitle.innerText = "✓ Rencana Belanja Aman!";
+          alertMessage.innerHTML = `Sisa budget sebesar <span class="font-bold">Rp ${sisaBudget.toLocaleString("id-ID")}</span> dapat Anda simpan.`;
+        } else {
+          alertBox.className =
+            "bg-red-50 border border-red-200 text-red-800 rounded p-3 text-center text-sm mb-6";
+          alertTitle.innerText = "⚠️ Peringatan Budget!";
+          alertMessage.innerHTML = `Anda kekurangan dana <span class="font-bold">Rp ${Math.abs(sisaBudget).toLocaleString("id-ID")}</span>.`;
+        }
+
+        document.getElementById("step-3").classList.add("hidden");
+        document.getElementById("step-4").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function mulaiUlangFlow() {
+        document.getElementById("step-4").classList.add("hidden");
+        document.getElementById("step-1").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ==================== FUNGSI DOWNLOAD ULTIMATE PDF ====================
+      function downloadPDF() {
+        // Ambil elemen yang tersembunyi (berisi Step 2 dan Step 3)
+        const printElement = document.getElementById("print-template");
+
+        const opt = {
+          margin: [10, 0, 10, 0], // Margin PDF
+          filename: "Smart_Meal_Planner_Report.pdf",
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 }, // Agar teks di PDF jernih
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        };
+
+        alert(
+          "Sedang menyiapkan file PDF Anda (Daftar Belanja & Jadwal Menu). Silakan tunggu...",
+        );
+
+        // html2pdf akan otomatis memfoto div #print-template yang tersembunyi
+        html2pdf()
+          .set(opt)
+          .from(printElement)
+          .save()
+          .then(() => {
+            console.log("PDF Berhasil Diunduh!");
+          });
+      }
+    </script>
+  </body>
 </html>
